@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>数据可视化交互平台 - 第四章实例</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -151,6 +152,18 @@
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
+    
+    <!-- GitHub Pages 调试信息 -->
+    <script>
+        console.log('页面加载完成');
+        console.log('Chart.js 版本:', Chart?.version || '未加载');
+        console.log('CSS文件加载状态:', document.styleSheets.length > 0 ? '已加载' : '未加载');
+        
+        // 检测错误
+        window.addEventListener('error', function(e) {
+            console.error('页面错误:', e.error);
+        });
+    </script>
 </body>
 </html>
