@@ -154,7 +154,7 @@
 
     <script src="./script.js"></script>
     
-    <!-- GitHub Pages 调试信息 -->
+    <!-- GitHub Pages 调试信息和修复 -->
     <script>
         console.log('页面加载完成');
         console.log('Chart.js 版本:', Chart?.version || '未加载');
@@ -163,6 +163,34 @@
         // 检测错误
         window.addEventListener('error', function(e) {
             console.error('页面错误:', e.error);
+        });
+        
+        // 如果Chart.js加载失败，尝试重新加载
+        if (!window.Chart) {
+            console.warn('Chart.js未加载，尝试重新加载...');
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js';
+            script.onload = function() {
+                console.log('Chart.js重新加载成功');
+                // 延迟初始化图表
+                setTimeout(initCharts, 100);
+            };
+            document.head.appendChild(script);
+        }
+        
+        // 确保CSS正确加载
+        window.addEventListener('load', function() {
+            const styles = document.querySelectorAll('link[rel="stylesheet"]');
+            styles.forEach(style => {
+                if (!style.sheet) {
+                    console.warn('CSS文件加载失败:', style.href);
+                    // 重新加载CSS
+                    const newStyle = document.createElement('link');
+                    newStyle.rel = 'stylesheet';
+                    newStyle.href = style.href;
+                    document.head.appendChild(newStyle);
+                }
+            });
         });
     </script>
 </body>
