@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据可视化交互平台 - 第四章实例</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>数据可视化交互平台</h1>
+            <p class="subtitle">基于第四章数据可视化课件实例</p>
+            
+            <div class="theme-selector">
+                <button class="theme-btn active" data-theme="light">淡色主题</button>
+                <button class="theme-btn" data-theme="blue">蓝色主题</button>
+                <button class="theme-btn" data-theme="green">绿色主题</button>
+                <button class="theme-btn" data-theme="purple">紫色主题</button>
+                <button class="theme-btn" data-theme="orange">橙色主题</button>
+                <button class="theme-btn" data-theme="dark">深色主题</button>
+            </div>
+        </header>
+
+        <div class="charts-grid">
+            <!-- 图表1：图书采购情况柱状图 -->
+            <div class="chart-container">
+                <h3>地区图书采购情况对比</h3>
+                <canvas id="bookPurchaseChart"></canvas>
+                <div class="data-controls">
+                    <h4>地区1数据编辑：</h4>
+                    <div class="data-inputs">
+                        <label>家庭类: <input type="number" value="1200" data-chart="bookPurchase" data-index="0" data-region="1"></label>
+                        <label>小说类: <input type="number" value="2400" data-chart="bookPurchase" data-index="1" data-region="1"></label>
+                        <label>心理类: <input type="number" value="1800" data-chart="bookPurchase" data-index="2" data-region="1"></label>
+                        <label>科技类: <input type="number" value="2200" data-chart="bookPurchase" data-index="3" data-region="1"></label>
+                        <label>儿童类: <input type="number" value="1600" data-chart="bookPurchase" data-index="4" data-region="1"></label>
+                    </div>
+                    <h4>地区2数据编辑：</h4>
+                    <div class="data-inputs">
+                        <label>家庭类: <input type="number" value="1050" data-chart="bookPurchase" data-index="0" data-region="2"></label>
+                        <label>小说类: <input type="number" value="2100" data-chart="bookPurchase" data-index="1" data-region="2"></label>
+                        <label>心理类: <input type="number" value="1300" data-chart="bookPurchase" data-index="2" data-region="2"></label>
+                        <label>科技类: <input type="number" value="1600" data-chart="bookPurchase" data-index="3" data-region="2"></label>
+                        <label>儿童类: <input type="number" value="1340" data-chart="bookPurchase" data-index="4" data-region="2"></label>
+                    </div>
+                    <button onclick="updateChart('bookPurchase')">更新图表</button>
+                </div>
+            </div>
+
+            <!-- 图表2：汇率走势折线图 -->
+            <div class="chart-container">
+                <h3>美元/人民币汇率走势</h3>
+                <canvas id="exchangeRateChart"></canvas>
+                <div class="data-controls">
+                    <h4>2017年7月数据：</h4>
+                    <div class="data-inputs">
+                        <label>第1天: <input type="number" step="0.01" value="6.78" data-chart="exchangeRate" data-index="0" data-year="2017"></label>
+                        <label>第2天: <input type="number" step="0.01" value="6.79" data-chart="exchangeRate" data-index="1" data-year="2017"></label>
+                        <label>第3天: <input type="number" step="0.01" value="6.80" data-chart="exchangeRate" data-index="2" data-year="2017"></label>
+                        <label>第4天: <input type="number" step="0.01" value="6.81" data-chart="exchangeRate" data-index="3" data-year="2017"></label>
+                        <label>第5天: <input type="number" step="0.01" value="6.82" data-chart="exchangeRate" data-index="4" data-year="2017"></label>
+                    </div>
+                    <h4>2019年7月数据：</h4>
+                    <div class="data-inputs">
+                        <label>第1天: <input type="number" step="0.01" value="6.85" data-chart="exchangeRate" data-index="0" data-year="2019"></label>
+                        <label>第2天: <input type="number" step="0.01" value="6.86" data-chart="exchangeRate" data-index="1" data-year="2019"></label>
+                        <label>第3天: <input type="number" step="0.01" value="6.87" data-chart="exchangeRate" data-index="2" data-year="2019"></label>
+                        <label>第4天: <input type="number" step="0.01" value="6.88" data-chart="exchangeRate" data-index="3" data-year="2019"></label>
+                        <label>第5天: <input type="number" step="0.01" value="6.89" data-chart="exchangeRate" data-index="4" data-year="2019"></label>
+                    </div>
+                    <button onclick="updateChart('exchangeRate')">更新图表</button>
+                </div>
+            </div>
+
+            <!-- 图表3：三角函数图像 -->
+            <div class="chart-container">
+                <h3>三角函数图像</h3>
+                <canvas id="trigonometricChart"></canvas>
+                <div class="data-controls">
+                    <label>函数类型：
+                        <select id="functionType" onchange="updateTrigonometricChart()">
+                            <option value="sin">正弦函数</option>
+                            <option value="cos">余弦函数</option>
+                            <option value="tan">正切函数</option>
+                        </select>
+                    </label>
+                    <label>振幅：
+                        <input type="range" id="amplitude" min="1" max="5" value="1" step="0.1" onchange="updateTrigonometricChart()">
+                        <span id="amplitudeValue">1</span>
+                    </label>
+                    <button onclick="updateTrigonometricChart()">更新图表</button>
+                </div>
+            </div>
+
+            <!-- 图表4：基础柱状图 -->
+            <div class="chart-container">
+                <h3>基础柱状图实例</h3>
+                <canvas id="basicBarChart"></canvas>
+                <div class="data-controls">
+                    <h4>数据编辑：</h4>
+                    <div class="data-inputs">
+                        <label>A类: <input type="number" value="30" data-chart="basicBar" data-index="0"></label>
+                        <label>B类: <input type="number" value="45" data-chart="basicBar" data-index="1"></label>
+                        <label>C类: <input type="number" value="25" data-chart="basicBar" data-index="2"></label>
+                        <label>D类: <input type="number" value="40" data-chart="basicBar" data-index="3"></label>
+                        <label>E类: <input type="number" value="35" data-chart="basicBar" data-index="4"></label>
+                    </div>
+                    <button onclick="updateChart('basicBar')">更新图表</button>
+                </div>
+            </div>
+
+            <!-- 图表5：数据分布饼图 -->
+            <div class="chart-container">
+                <h3>数据分布饼图</h3>
+                <canvas id="pieChart"></canvas>
+                <div class="data-controls">
+                    <h4>数据编辑：</h4>
+                    <div class="data-inputs">
+                        <label>项目A: <input type="number" value="40" data-chart="pie" data-index="0"></label>
+                        <label>项目B: <input type="number" value="25" data-chart="pie" data-index="1"></label>
+                        <label>项目C: <input type="number" value="20" data-chart="pie" data-index="2"></label>
+                        <label>项目D: <input type="number" value="15" data-chart="pie" data-index="3"></label>
+                    </div>
+                    <button onclick="updateChart('pie')">更新图表</button>
+                </div>
+            </div>
+
+            <!-- 图表6：散点分布图 -->
+            <div class="chart-container">
+                <h3>散点分布图</h3>
+                <canvas id="scatterChart"></canvas>
+                <div class="data-controls">
+                    <h4>数据点编辑：</h4>
+                    <div class="data-inputs">
+                        <label>点1 X: <input type="number" value="2" data-chart="scatter" data-point="0" data-axis="x"> Y: <input type="number" value="4" data-chart="scatter" data-point="0" data-axis="y"></label>
+                        <label>点2 X: <input type="number" value="4" data-chart="scatter" data-point="1" data-axis="x"> Y: <input type="number" value="8" data-chart="scatter" data-point="1" data-axis="y"></label>
+                        <label>点3 X: <input type="number" value="6" data-chart="scatter" data-point="2" data-axis="x"> Y: <input type="number" value="6" data-chart="scatter" data-point="2" data-axis="y"></label>
+                        <label>点4 X: <input type="number" value="8" data-chart="scatter" data-point="3" data-axis="x"> Y: <input type="number" value="10" data-chart="scatter" data-point="3" data-axis="y"></label>
+                        <label>点5 X: <input type="number" value="10" data-chart="scatter" data-point="4" data-axis="x"> Y: <input type="number" value="12" data-chart="scatter" data-point="4" data-axis="y"></label>
+                    </div>
+                    <button onclick="updateChart('scatter')">更新图表</button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>基于第四章数据可视化课件代码创建</p>
+            <p>支持实时数据编辑、颜色主题切换和动画效果</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
