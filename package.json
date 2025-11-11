@@ -1,0 +1,31 @@
+{
+  "name": "data-visualization-platform",
+  "version": "1.0.0",
+  "description": "功能完整的数据可视化平台，支持多种图表类型和交互功能",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000",
+    "dev": "live-server --port=3000 --watch=index.html,styles.css,script.js",
+    "build": "echo 'Build complete - this is a static website'"
+  },
+  "keywords": [
+    "data-visualization",
+    "charts",
+    "interactive",
+    "javascript",
+    "echarts"
+  ],
+  "author": "Data Visualization Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/data-visualization-platform.git"
+  },
+  "homepage": "https://your-username.github.io/data-visualization-platform",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
