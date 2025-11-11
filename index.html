@@ -3,195 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数据可视化交互平台 - 第四章实例</title>
-    <link rel="stylesheet" href="./styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>第四章高级数据可视化平台 - matplotlib图表样式与颜色应用</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>数据可视化交互平台</h1>
-            <p class="subtitle">基于第四章数据可视化课件实例</p>
-            
-            <div class="theme-selector">
-                <button class="theme-btn active" data-theme="light">淡色主题</button>
-                <button class="theme-btn" data-theme="blue">蓝色主题</button>
-                <button class="theme-btn" data-theme="green">绿色主题</button>
-                <button class="theme-btn" data-theme="purple">紫色主题</button>
-                <button class="theme-btn" data-theme="orange">橙色主题</button>
-                <button class="theme-btn" data-theme="dark">深色主题</button>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">第四章高级数据可视化平台</h1>
+            <div class="nav-info">
+                <span>基于matplotlib图表样式、颜色应用与线型选择</span>
             </div>
-        </header>
-
-        <div class="charts-grid">
-            <!-- 图表1：图书采购情况柱状图 -->
-            <div class="chart-container">
-                <h3>地区图书采购情况对比</h3>
-                <canvas id="bookPurchaseChart"></canvas>
-                <div class="data-controls">
-                    <h4>地区1数据编辑：</h4>
-                    <div class="data-inputs">
-                        <label>家庭类: <input type="number" value="1200" data-chart="bookPurchase" data-index="0" data-region="1"></label>
-                        <label>小说类: <input type="number" value="2400" data-chart="bookPurchase" data-index="1" data-region="1"></label>
-                        <label>心理类: <input type="number" value="1800" data-chart="bookPurchase" data-index="2" data-region="1"></label>
-                        <label>科技类: <input type="number" value="2200" data-chart="bookPurchase" data-index="3" data-region="1"></label>
-                        <label>儿童类: <input type="number" value="1600" data-chart="bookPurchase" data-index="4" data-region="1"></label>
-                    </div>
-                    <h4>地区2数据编辑：</h4>
-                    <div class="data-inputs">
-                        <label>家庭类: <input type="number" value="1050" data-chart="bookPurchase" data-index="0" data-region="2"></label>
-                        <label>小说类: <input type="number" value="2100" data-chart="bookPurchase" data-index="1" data-region="2"></label>
-                        <label>心理类: <input type="number" value="1300" data-chart="bookPurchase" data-index="2" data-region="2"></label>
-                        <label>科技类: <input type="number" value="1600" data-chart="bookPurchase" data-index="3" data-region="2"></label>
-                        <label>儿童类: <input type="number" value="1340" data-chart="bookPurchase" data-index="4" data-region="2"></label>
-                    </div>
-                    <button onclick="updateChart('bookPurchase')">更新图表</button>
-                </div>
-            </div>
-
-            <!-- 图表2：汇率走势折线图 -->
-            <div class="chart-container">
-                <h3>美元/人民币汇率走势</h3>
-                <canvas id="exchangeRateChart"></canvas>
-                <div class="data-controls">
-                    <h4>2017年7月数据：</h4>
-                    <div class="data-inputs">
-                        <label>第1天: <input type="number" step="0.01" value="6.78" data-chart="exchangeRate" data-index="0" data-year="2017"></label>
-                        <label>第2天: <input type="number" step="0.01" value="6.79" data-chart="exchangeRate" data-index="1" data-year="2017"></label>
-                        <label>第3天: <input type="number" step="0.01" value="6.80" data-chart="exchangeRate" data-index="2" data-year="2017"></label>
-                        <label>第4天: <input type="number" step="0.01" value="6.81" data-chart="exchangeRate" data-index="3" data-year="2017"></label>
-                        <label>第5天: <input type="number" step="0.01" value="6.82" data-chart="exchangeRate" data-index="4" data-year="2017"></label>
-                    </div>
-                    <h4>2019年7月数据：</h4>
-                    <div class="data-inputs">
-                        <label>第1天: <input type="number" step="0.01" value="6.85" data-chart="exchangeRate" data-index="0" data-year="2019"></label>
-                        <label>第2天: <input type="number" step="0.01" value="6.86" data-chart="exchangeRate" data-index="1" data-year="2019"></label>
-                        <label>第3天: <input type="number" step="0.01" value="6.87" data-chart="exchangeRate" data-index="2" data-year="2019"></label>
-                        <label>第4天: <input type="number" step="0.01" value="6.88" data-chart="exchangeRate" data-index="3" data-year="2019"></label>
-                        <label>第5天: <input type="number" step="0.01" value="6.89" data-chart="exchangeRate" data-index="4" data-year="2019"></label>
-                    </div>
-                    <button onclick="updateChart('exchangeRate')">更新图表</button>
-                </div>
-            </div>
-
-            <!-- 图表3：三角函数图像 -->
-            <div class="chart-container">
-                <h3>三角函数图像</h3>
-                <canvas id="trigonometricChart"></canvas>
-                <div class="data-controls">
-                    <label>函数类型：
-                        <select id="functionType" onchange="updateTrigonometricChart()">
-                            <option value="sin">正弦函数</option>
-                            <option value="cos">余弦函数</option>
-                            <option value="tan">正切函数</option>
-                        </select>
-                    </label>
-                    <label>振幅：
-                        <input type="range" id="amplitude" min="1" max="5" value="1" step="0.1" onchange="updateTrigonometricChart()">
-                        <span id="amplitudeValue">1</span>
-                    </label>
-                    <button onclick="updateTrigonometricChart()">更新图表</button>
-                </div>
-            </div>
-
-            <!-- 图表4：基础柱状图 -->
-            <div class="chart-container">
-                <h3>基础柱状图实例</h3>
-                <canvas id="basicBarChart"></canvas>
-                <div class="data-controls">
-                    <h4>数据编辑：</h4>
-                    <div class="data-inputs">
-                        <label>A类: <input type="number" value="30" data-chart="basicBar" data-index="0"></label>
-                        <label>B类: <input type="number" value="45" data-chart="basicBar" data-index="1"></label>
-                        <label>C类: <input type="number" value="25" data-chart="basicBar" data-index="2"></label>
-                        <label>D类: <input type="number" value="40" data-chart="basicBar" data-index="3"></label>
-                        <label>E类: <input type="number" value="35" data-chart="basicBar" data-index="4"></label>
-                    </div>
-                    <button onclick="updateChart('basicBar')">更新图表</button>
-                </div>
-            </div>
-
-            <!-- 图表5：数据分布饼图 -->
-            <div class="chart-container">
-                <h3>数据分布饼图</h3>
-                <canvas id="pieChart"></canvas>
-                <div class="data-controls">
-                    <h4>数据编辑：</h4>
-                    <div class="data-inputs">
-                        <label>项目A: <input type="number" value="40" data-chart="pie" data-index="0"></label>
-                        <label>项目B: <input type="number" value="25" data-chart="pie" data-index="1"></label>
-                        <label>项目C: <input type="number" value="20" data-chart="pie" data-index="2"></label>
-                        <label>项目D: <input type="number" value="15" data-chart="pie" data-index="3"></label>
-                    </div>
-                    <button onclick="updateChart('pie')">更新图表</button>
-                </div>
-            </div>
-
-            <!-- 图表6：散点分布图 -->
-            <div class="chart-container">
-                <h3>散点分布图</h3>
-                <canvas id="scatterChart"></canvas>
-                <div class="data-controls">
-                    <h4>数据点编辑：</h4>
-                    <div class="data-inputs">
-                        <label>点1 X: <input type="number" value="2" data-chart="scatter" data-point="0" data-axis="x"> Y: <input type="number" value="4" data-chart="scatter" data-point="0" data-axis="y"></label>
-                        <label>点2 X: <input type="number" value="4" data-chart="scatter" data-point="1" data-axis="x"> Y: <input type="number" value="8" data-chart="scatter" data-point="1" data-axis="y"></label>
-                        <label>点3 X: <input type="number" value="6" data-chart="scatter" data-point="2" data-axis="x"> Y: <input type="number" value="6" data-chart="scatter" data-point="2" data-axis="y"></label>
-                        <label>点4 X: <input type="number" value="8" data-chart="scatter" data-point="3" data-axis="x"> Y: <input type="number" value="10" data-chart="scatter" data-point="3" data-axis="y"></label>
-                        <label>点5 X: <input type="number" value="10" data-chart="scatter" data-point="4" data-axis="x"> Y: <input type="number" value="12" data-chart="scatter" data-point="4" data-axis="y"></label>
-                    </div>
-                    <button onclick="updateChart('scatter')">更新图表</button>
-                </div>
+            <div class="nav-controls">
+                <button id="chapterInfo" class="btn btn-secondary">第四章内容</button>
+                <button id="themeToggle" class="btn btn-secondary">切换主题</button>
+                <button id="fullscreen" class="btn btn-secondary">全屏模式</button>
             </div>
         </div>
+    </nav>
 
-        <footer class="footer">
-            <p>基于第四章数据可视化课件代码创建</p>
-            <p>支持实时数据编辑、颜色主题切换和动画效果</p>
-        </footer>
+    <!-- 章节内容信息模态框 -->
+    <div id="chapterModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>第四章内容概述</h3>
+            <div class="chapter-content">
+                <h4>4.1 图表样式概述</h4>
+                <ul>
+                    <li>4.1.1 默认图表样式</li>
+                    <li>4.1.2 图表样式修改</li>
+                </ul>
+                
+                <h4>4.2 使用颜色</h4>
+                <ul>
+                    <li>4.2.1 使用基础颜色</li>
+                    <li>4.2.2 使用颜色映射表</li>
+                    <li>4.2.3 实例：两个地区对不同种类图书的采购情况</li>
+                </ul>
+                
+                <h4>4.3 选择线型</h4>
+                <ul>
+                    <li>4.3.2 实例：2017年7月与2019年7月国际外汇市场美元/人民币汇率走势</li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <script src="./script.js"></script>
-    
-    <!-- GitHub Pages 调试信息和修复 -->
-    <script>
-        console.log('页面加载完成');
-        console.log('Chart.js 版本:', Chart?.version || '未加载');
-        console.log('CSS文件加载状态:', document.styleSheets.length > 0 ? '已加载' : '未加载');
-        
-        // 检测错误
-        window.addEventListener('error', function(e) {
-            console.error('页面错误:', e.error);
-        });
-        
-        // 如果Chart.js加载失败，尝试重新加载
-        if (!window.Chart) {
-            console.warn('Chart.js未加载，尝试重新加载...');
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js';
-            script.onload = function() {
-                console.log('Chart.js重新加载成功');
-                // 延迟初始化图表
-                setTimeout(initCharts, 100);
-            };
-            document.head.appendChild(script);
-        }
-        
-        // 确保CSS正确加载
-        window.addEventListener('load', function() {
-            const styles = document.querySelectorAll('link[rel="stylesheet"]');
-            styles.forEach(style => {
-                if (!style.sheet) {
-                    console.warn('CSS文件加载失败:', style.href);
-                    // 重新加载CSS
-                    const newStyle = document.createElement('link');
-                    newStyle.rel = 'stylesheet';
-                    newStyle.href = style.href;
-                    document.head.appendChild(newStyle);
-                }
-            });
-        });
-    </script>
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="control-panel">
+                <h3>实例选择</h3>
+                <div class="control-group">
+                    <label for="exampleSelect">第四章实例:</label>
+                    <select id="exampleSelect" class="form-control">
+                        <option value="book_purchase">4.2.3 图书采购情况</option>
+                        <option value="exchange_rate">4.3.2 汇率走势图</option>
+                        <option value="custom_data">自定义数据</option>
+                    </select>
+                </div>
+
+                <h3>多图表配置</h3>
+                <div class="chart-grid">
+                    <div class="chart-config">
+                        <h4>图表1配置</h4>
+                        <div class="control-group">
+                            <label for="chartType1">图表类型:</label>
+                            <select id="chartType1" class="form-control">
+                                <option value="line">折线图</option>
+                                <option value="bar">柱状图</option>
+                                <option value="stacked_bar">堆叠柱状图</option>
+                                <option value="area">面积图</option>
+                                <option value="scatter">散点图</option>
+                                <option value="pie">饼图</option>
+                                <option value="radar">雷达图</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="animation1">动画效果:</label>
+                            <input type="checkbox" id="animation1" checked>
+                        </div>
+                    </div>
+                    <div class="chart-config">
+                        <h4>图表2配置</h4>
+                        <div class="control-group">
+                            <label for="chartType2">图表类型:</label>
+                            <select id="chartType2" class="form-control">
+                                <option value="line">折线图</option>
+                                <option value="bar">柱状图</option>
+                                <option value="stacked_bar">堆叠柱状图</option>
+                                <option value="area">面积图</option>
+                                <option value="scatter">散点图</option>
+                                <option value="pie">饼图</option>
+                                <option value="radar">雷达图</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="animation2">动画效果:</label>
+                            <input type="checkbox" id="animation2" checked>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>高级样式配置</h3>
+                
+                <!-- 颜色方案 -->
+                <div class="control-group">
+                    <label>颜色方案:</label>
+                    <div class="color-palette">
+                        <div class="color-scheme" data-scheme="matplotlib">
+                            <div class="color-sample" style="background-color: #1f77b4"></div>
+                            <div class="color-sample" style="background-color: #ff7f0e"></div>
+                            <div class="color-sample" style="background-color: #2ca02c"></div>
+                            <div class="color-sample" style="background-color: #d62728"></div>
+                            <div class="color-sample" style="background-color: #9467bd"></div>
+                            <span>matplotlib默认</span>
+                        </div>
+                        <div class="color-scheme" data-scheme="pastel">
+                            <div class="color-sample" style="background-color: #FFB6C1"></div>
+                            <div class="color-sample" style="background-color: #87CEFA"></div>
+                            <div class="color-sample" style="background-color: #98FB98"></div>
+                            <div class="color-sample" style="background-color: #FFD700"></div>
+                            <div class="color-sample" style="background-color: #DDA0DD"></div>
+                            <span>柔和色系</span>
+                        </div>
+                        <div class="color-scheme" data-scheme="cool">
+                            <div class="color-sample" style="background-color: #8dd3c7"></div>
+                            <div class="color-sample" style="background-color: #ffffb3"></div>
+                            <div class="color-sample" style="background-color: #bebada"></div>
+                            <div class="color-sample" style="background-color: #fb8072"></div>
+                            <div class="color-sample" style="background-color: #80b1d3"></div>
+                            <span>冷色系</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 颜色映射表 -->
+                <div class="control-group">
+                    <label>颜色映射表:</label>
+                    <select id="colormap" class="form-control">
+                        <option value="viridis">viridis</option>
+                        <option value="plasma">plasma</option>
+                        <option value="inferno">inferno</option>
+                        <option value="magma">magma</option>
+                        <option value="cividis">cividis</option>
+                        <option value="cool">cool</option>
+                        <option value="hot">hot</option>
+                        <option value="spring">spring</option>
+                        <option value="summer">summer</option>
+                        <option value="autumn">autumn</option>
+                        <option value="winter">winter</option>
+                    </select>
+                </div>
+
+                <!-- 线型样式 -->
+                <div class="control-group">
+                    <label for="lineStyle">线型样式:</label>
+                    <select id="lineStyle" class="form-control">
+                        <option value="solid">实线</option>
+                        <option value="dashed">虚线</option>
+                        <option value="dotted">点线</option>
+                        <option value="dashdot">点划线</option>
+                    </select>
+                </div>
+
+                <!-- 图表样式设置 -->
+                <div class="control-group">
+                    <label for="gridToggle">显示网格:</label>
+                    <input type="checkbox" id="gridToggle" checked>
+                </div>
+
+                <div class="control-group">
+                    <label for="legendToggle">显示图例:</label>
+                    <input type="checkbox" id="legendToggle" checked>
+                </div>
+
+                <div class="control-group">
+                    <label for="smoothToggle">平滑曲线:</label>
+                    <input type="checkbox" id="smoothToggle">
+                </div>
+
+                <!-- 高级图表设置 -->
+                <div class="control-group">
+                    <label for="markerSize">标记点大小:</label>
+                    <input type="range" id="markerSize" min="1" max="20" value="8" class="form-control">
+                    <span id="markerSizeValue">8px</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="lineWidth">线条宽度:</label>
+                    <input type="range" id="lineWidth" min="1" max="10" value="2" class="form-control">
+                    <span id="lineWidthValue">2px</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="opacity">透明度:</label>
+                    <input type="range" id="opacity" min="0.1" max="1" step="0.1" value="1" class="form-control">
+                    <span id="opacityValue">100%</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="animationSpeed">动画速度:</label>
+                    <input type="range" id="animationSpeed" min="100" max="3000" step="100" value="1000" class="form-control">
+                    <span id="animationSpeedValue">1000ms</span>
+                </div>
+
+                <!-- 操作按钮组 -->
+                <div class="button-group">
+                    <button id="applyChanges" class="btn btn-primary">应用样式</button>
+                    <button id="resetData" class="btn btn-secondary">重置数据</button>
+                    <button id="exportPNG" class="btn btn-secondary">导出图表</button>
+                    <button id="exportData" class="btn btn-secondary">导出数据</button>
+                    <button id="importData" class="btn btn-secondary">导入数据</button>
+                    <button id="screenshot" class="btn btn-secondary">截图</button>
+                    <button id="exportAnalysis" class="btn btn-secondary">分析报告</button>
+                    <button id="advancedAnalysis" class="btn btn-secondary">高级分析</button>
+                </div>
+            </div>
+
+            <!-- 数据编辑面板 -->
+            <div class="data-editor">
+                <h3>数据实时编辑</h3>
+                <div class="data-info">
+                    <p>支持实时编辑和自定义数据</p>
+                </div>
+                <div id="dataTable" class="data-table">
+                    <!-- 数据表格将通过JavaScript动态生成 -->
+                </div>
+                <div class="editor-controls">
+                    <button id="addRow" class="btn btn-small">添加行</button>
+                    <button id="removeRow" class="btn btn-small">删除行</button>
+                    <button id="addColumn" class="btn btn-small">添加列</button>
+                    <button id="removeColumn" class="btn btn-small">删除列</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 图表显示区域 -->
+        <main class="chart-area">
+            <div class="chart-header">
+                <h2 id="chartTitle">第四章数据可视化平台</h2>
+                <div class="chapter-section">
+                    <span id="currentSection">4.2.3 图书采购情况实例</span>
+                    <div class="stats-info">
+                        <span id="dataStats"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 多图表联动区域 -->
+            <div class="multi-charts">
+                <div class="chart-container">
+                    <div id="mainChart1" class="chart"></div>
+                    <div class="chart-actions">
+                        <button class="btn btn-small chart-fullscreen" data-chart="1">全屏</button>
+                        <button class="btn btn-small chart-download" data-chart="1">下载</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div id="mainChart2" class="chart"></div>
+                    <div class="chart-actions">
+                        <button class="btn btn-small chart-fullscreen" data-chart="2">全屏</button>
+                        <button class="btn btn-small chart-download" data-chart="2">下载</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计信息面板 -->
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span class="stat-label">数据点数</span>
+                    <span class="stat-value" id="dataCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">平均值</span>
+                    <span class="stat-value" id="dataMean">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">最大值</span>
+                    <span class="stat-value" id="dataMax">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">最小值</span>
+                    <span class="stat-value" id="dataMin">0</span>
+                </div>
+            </div>
+
+            <!-- 代码展示区域 -->
+            <div class="code-section">
+                <h3>对应matplotlib代码</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="python">Python代码</button>
+                    <button class="code-tab" data-tab="javascript">JavaScript代码</button>
+                </div>
+                <div id="pythonCode" class="code-display active">
+                    <pre><code># 第四章 matplotlib代码示例</code></pre>
+                </div>
+                <div id="javascriptCode" class="code-display">
+                    <pre><code>// ECharts配置代码示例</code></pre>
+                </div>
+            </div>
+
+            <!-- 数据趋势分析区域 -->
+            <div class="analysis-section">
+                <h3>📈 数据趋势分析</h3>
+                <div class="analysis-content">
+                    <div class="analysis-tabs">
+                        <button class="analysis-tab active" data-tab="trend">趋势分析</button>
+                        <button class="analysis-tab" data-tab="statistics">统计指标</button>
+                        <button class="analysis-tab" data-tab="insights">数据洞察</button>
+                        <button class="analysis-tab" data-tab="forecast">趋势预测</button>
+                    </div>
+                    
+                    <div id="trendAnalysis" class="analysis-panel active">
+                        <div class="trend-chart">
+                            <canvas id="trendChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="trend-summary">
+                            <h4>趋势摘要</h4>
+                            <div id="trendSummary"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="statisticsPanel" class="analysis-panel">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="stat-label">相关系数</span>
+                                <span class="stat-value" id="correlation">0.00</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-label">增长率</span>
+                                <span class="stat-value" id="growthRate">0%</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-label">标准差</span>
+                                <span class="stat-value" id="stdDev">0.00</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="stat-label">变异系数</span>
+                                <span class="stat-value" id="cv">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="insightsPanel" class="analysis-panel">
+                        <div class="insights-list">
+                            <h4>数据洞察</h4>
+                            <ul id="insightsList">
+                                <li>正在分析数据模式...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div id="forecastPanel" class="analysis-panel">
+                        <div class="forecast-content">
+                            <h4>趋势预测</h4>
+                            <div id="forecastResults">选择数据后生成预测</div>
+                            <button id="generateForecast" class="btn btn-small">生成预测</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 知识点说明区域 -->
+            <div class="knowledge-section">
+                <h3>第四章知识点</h3>
+                <div class="knowledge-content">
+                    <div class="knowledge-item">
+                        <h4>📊 图表样式概述</h4>
+                        <ul>
+                            <li>matplotlib默认图表样式设置</li>
+                            <li>图表样式文件位置和修改方法</li>
+                            <li>全局样式参数配置</li>
+                            <li>字体和字体大小设置</li>
+                            <li>图形尺寸和分辨率配置</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="knowledge-item">
+                        <h4>🎨 颜色应用</h4>
+                        <ul>
+                            <li>基础颜色名称和十六进制值</li>
+                            <li>颜色映射表的应用场景</li>
+                            <li>不同颜色方案的对比选择</li>
+                            <li>颜色搭配原则</li>
+                            <li>透明度设置和渐变效果</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="knowledge-item">
+                        <h4>📈 线型选择</h4>
+                        <ul>
+                            <li>不同线型样式的应用场景</li>
+                            <li>线型参数的详细配置</li>
+                            <li>趋势数据的线型选择原则</li>
+                            <li>线宽和线型组合</li>
+                            <li>平滑曲线和插值方法</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 响应式设计展示 -->
+            <div class="responsive-section">
+                <h3>响应式图表适配</h3>
+                <div class="device-preview">
+                    <div class="device desktop">
+                        <span>桌面端</span>
+                        <div class="chart-preview"></div>
+                    </div>
+                    <div class="device tablet">
+                        <span>平板端</span>
+                        <div class="chart-preview"></div>
+                    </div>
+                    <div class="device mobile">
+                        <span>移动端</span>
+                        <div class="chart-preview"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 异常提醒模态框 -->
+    <div id="alertModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>操作提示</h3>
+            <p id="alertMessage"></p>
+        </div>
+    </div>
+
+    <!-- 数据导入模态框 -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>导入数据</h3>
+            <input type="file" id="dataFile" accept=".xlsx,.csv,.json">
+            <div class="button-group">
+                <button id="confirmImport" class="btn btn-primary">确认导入</button>
+                <button id="cancelImport" class="btn btn-secondary">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
