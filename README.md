@@ -50,24 +50,31 @@
 - **响应式适配**：适配不同设备屏幕
 - **操作撤销/重做**：支持操作历史管理
 
-## 技术栈
+## 🛠 技术栈（GitHub Pages兼容）
 
 - **前端框架**：纯HTML/CSS/JavaScript
-- **图表库**：Chart.js
+- **图表库**：Chart.js + ECharts（CDN引入）
 - **响应式设计**：CSS Grid + Flexbox
 - **动画效果**：CSS3动画 + JavaScript动画
+- **部署兼容**：完美支持GitHub Pages静态部署
 
-## 快速开始
+## 🚀 快速开始（GitHub Pages友好）
 
 ### 本地运行
 1. 克隆或下载项目文件
 2. 直接在浏览器中打开 `index.html` 文件
 3. 开始使用数据可视化功能
 
-### GitHub部署
+### GitHub Pages部署（推荐）
 1. 将项目上传到GitHub仓库
 2. 开启GitHub Pages功能
 3. 访问生成的URL即可使用
+
+**重要说明：本项目完全兼容GitHub Pages**
+- ✅ 使用 JavaScript 图表库（Chart.js + ECharts）
+- ✅ 客户端渲染，无需服务器支持
+- ✅ 所有图表在浏览器中实时生成
+- ✅ 无需Python环境，不会出现matplotlib运行问题
 
 ## 使用说明
 
