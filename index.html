@@ -19,6 +19,7 @@
                 <span>基于matplotlib图表样式、颜色应用与线型选择</span>
             </div>
             <div class="nav-controls">
+                <button id="editData" class="btn btn-primary">编辑数据</button>
                 <button id="chapterInfo" class="btn btn-secondary">第四章内容</button>
                 <button id="themeToggle" class="btn btn-secondary">切换主题</button>
                 <button id="fullscreen" class="btn btn-secondary">全屏模式</button>
@@ -49,6 +50,25 @@
                 <ul>
                     <li>4.3.2 实例：2017年7月与2019年7月国际外汇市场美元/人民币汇率走势</li>
                 </ul>
+                
+                <h4>4.4 添加数据标记</h4>
+                <ul>
+                    <li>4.4.1 添加折线图或散点图的数据标记</li>
+                    <li>4.4.2 实例：标记不同产品各季度的销售额</li>
+                </ul>
+                
+                <h4>4.5 设置字体</h4>
+                <ul>
+                    <li>4.5.1 设置字体样式</li>
+                    <li>4.5.2 实例：未来15天的最高气温和最低气温</li>
+                </ul>
+                
+                <h4>4.6 切换主题风格</h4>
+                <h4>4.7 填充区域</h4>
+                <ul>
+                    <li>4.7.1 填充多边形或曲线之间的区域</li>
+                    <li>4.7.2 实例：彩色的"雪花"</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -64,6 +84,8 @@
                     <select id="exampleSelect" class="form-control">
                         <option value="book_purchase">4.2.3 图书采购情况</option>
                         <option value="exchange_rate">4.3.2 汇率走势图</option>
+                        <option value="product_sales">4.4.2 产品销售分析</option>
+                        <option value="temperature">4.5.2 气温变化趋势</option>
                         <option value="custom_data">自定义数据</option>
                     </select>
                 </div>
@@ -116,6 +138,30 @@
                 <div class="control-group">
                     <label>颜色方案:</label>
                     <div class="color-palette">
+                        <div class="color-scheme active" data-scheme="elegant">
+                            <div class="color-sample" style="background-color: #9AC5F4"></div>
+                            <div class="color-sample" style="background-color: #A7ECEE"></div>
+                            <div class="color-sample" style="background-color: #FFE699"></div>
+                            <div class="color-sample" style="background-color: #FFA8A8"></div>
+                            <div class="color-sample" style="background-color: #C4C1E0"></div>
+                            <span>优雅淡色</span>
+                        </div>
+                        <div class="color-scheme" data-scheme="delicate">
+                            <div class="color-sample" style="background-color: #F8C6D7"></div>
+                            <div class="color-sample" style="background-color: #D4F1F9"></div>
+                            <div class="color-sample" style="background-color: #FFE6B3"></div>
+                            <div class="color-sample" style="background-color: #B5EAD7"></div>
+                            <div class="color-sample" style="background-color: #C9C2FF"></div>
+                            <span>精致淡色</span>
+                        </div>
+                        <div class="color-scheme" data-scheme="serene">
+                            <div class="color-sample" style="background-color: #E1F5FE"></div>
+                            <div class="color-sample" style="background-color: #F3E5F5"></div>
+                            <div class="color-sample" style="background-color: #E8F5E8"></div>
+                            <div class="color-sample" style="background-color: #FFF3E0"></div>
+                            <div class="color-sample" style="background-color: #FCE4EC"></div>
+                            <span>宁静淡色</span>
+                        </div>
                         <div class="color-scheme" data-scheme="matplotlib">
                             <div class="color-sample" style="background-color: #1f77b4"></div>
                             <div class="color-sample" style="background-color: #ff7f0e"></div>
@@ -123,22 +169,6 @@
                             <div class="color-sample" style="background-color: #d62728"></div>
                             <div class="color-sample" style="background-color: #9467bd"></div>
                             <span>matplotlib默认</span>
-                        </div>
-                        <div class="color-scheme" data-scheme="pastel">
-                            <div class="color-sample" style="background-color: #FFB6C1"></div>
-                            <div class="color-sample" style="background-color: #87CEFA"></div>
-                            <div class="color-sample" style="background-color: #98FB98"></div>
-                            <div class="color-sample" style="background-color: #FFD700"></div>
-                            <div class="color-sample" style="background-color: #DDA0DD"></div>
-                            <span>柔和色系</span>
-                        </div>
-                        <div class="color-scheme" data-scheme="cool">
-                            <div class="color-sample" style="background-color: #8dd3c7"></div>
-                            <div class="color-sample" style="background-color: #ffffb3"></div>
-                            <div class="color-sample" style="background-color: #bebada"></div>
-                            <div class="color-sample" style="background-color: #fb8072"></div>
-                            <div class="color-sample" style="background-color: #80b1d3"></div>
-                            <span>冷色系</span>
                         </div>
                     </div>
                 </div>
@@ -227,7 +257,7 @@
             </div>
 
             <!-- 数据编辑面板 -->
-            <div class="data-editor">
+            <div class="data-editor" style="display: none;">
                 <h3>数据实时编辑</h3>
                 <div class="data-info">
                     <p>支持实时编辑和自定义数据</p>
@@ -240,6 +270,7 @@
                     <button id="removeRow" class="btn btn-small">删除行</button>
                     <button id="addColumn" class="btn btn-small">添加列</button>
                     <button id="removeColumn" class="btn btn-small">删除列</button>
+                    <button id="closeEditor" class="btn btn-small">关闭编辑</button>
                 </div>
             </div>
         </aside>

@@ -1,191 +1,128 @@
-// 第四章高级数据可视化平台 - 基于matplotlib图表样式与颜色应用
+// 第四章高级数据可视化平台 - JavaScript核心代码
+// 基于matplotlib图表样式、颜色应用与线型选择的教学内容
 
-class Chapter4AdvancedVisualizationPlatform {
+class DataVisualizationPlatform {
     constructor() {
-        this.charts = {};
-        this.currentData = [];
         this.currentExample = 'book_purchase';
-        this.isMultiChartMode = true;
-        this.colorSchemes = {
-            matplotlib: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f'],
-            pastel: ['#FFB6C1', '#87CEFA', '#98FB98', '#FFD700', '#DDA0DD', '#FFA07A', '#20B2AA', '#87CEEB'],
-            cool: ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3']
-        };
-        this.currentColorScheme = 'matplotlib';
-        this.lineStyles = {
-            solid: 'solid',
-            dashed: 'dashed',
-            dotted: 'dotted',
-            dashdot: 'dashdot'
-        };
-        this.colormaps = ['viridis', 'plasma', 'inferno', 'magma', 'cool', 'hot', 'spring', 'summer', 'autumn', 'winter'];
+        this.currentData = [];
+        this.charts = {};
+        this.initialized = false;
         this.init();
     }
 
-    // 初始化方法
     init() {
-        console.log('初始化第四章高级数据可视化平台...');
-        this.loadExampleData();
-        this.initializeCharts();
+        if (this.initialized) return;
+        
+        // 初始化数据
+        this.initExampleData();
+        
+        // 绑定事件
         this.bindEvents();
+        
+        // 初始化图表
+        this.initCharts();
+        
+        // 更新UI
+        this.updateUI();
+        
+        this.initialized = true;
+    }
+
+    initExampleData() {
+        switch (this.currentExample) {
+            case 'book_purchase':
+                // 4.2.3 实例：两个地区对不同种类图书的采购情况
+                this.currentData = [
+                    { category: '家庭', value1: 1200, value2: 1050 },
+                    { category: '小说', value1: 2400, value2: 2100 },
+                    { category: '心理', value1: 1800, value2: 1300 },
+                    { category: '科技', value1: 2200, value2: 1600 },
+                    { category: '儿童', value1: 1600, value2: 1340 }
+                ];
+                break;
+            case 'exchange_rate':
+                // 4.3.2 实例：2017年7月与2019年7月美元/人民币汇率走势
+                this.currentData = [
+                    { date: '7月3日', value1: 6.8007, value2: 6.8640 },
+                    { date: '7月4日', value1: 6.8007, value2: 6.8705 },
+                    { date: '7月5日', value1: 6.8015, value2: 6.8697 },
+                    { date: '7月6日', value1: 6.8015, value2: 6.8697 },
+                    { date: '7月7日', value1: 6.8060, value2: 6.8697 },
+                    { date: '7月8日', value1: 6.8060, value2: 6.8881 },
+                    { date: '7月9日', value1: 6.8060, value2: 6.8853 },
+                    { date: '7月10日', value1: 6.8036, value2: 6.8856 },
+                    { date: '7月11日', value1: 6.8025, value2: 6.8677 },
+                    { date: '7月12日', value1: 6.7877, value2: 6.8662 },
+                    { date: '7月13日', value1: 6.7835, value2: 6.8662 },
+                    { date: '7月14日', value1: 6.7758, value2: 6.8662 },
+                    { date: '7月17日', value1: 6.7700, value2: 6.8827 },
+                    { date: '7月18日', value1: 6.7463, value2: 6.8761 },
+                    { date: '7月19日', value1: 6.7519, value2: 6.8635 },
+                    { date: '7月24日', value1: 6.7511, value2: 6.8860 },
+                    { date: '7月25日', value1: 6.7511, value2: 6.8737 },
+                    { date: '7月26日', value1: 6.7539, value2: 6.8796 },
+                    { date: '7月31日', value1: 6.7265, value2: 6.8841 }
+                ];
+                break;
+
+            case 'product_sales':
+                // 4.4.2 实例：不同产品各季度的销售额
+                this.currentData = [
+                    { category: '第1季度', value1: 2144, value2: 853, value3: 153 },
+                    { category: '第2季度', value1: 4617, value2: 1214, value3: 155 },
+                    { category: '第3季度', value1: 7674, value2: 2414, value3: 292 },
+                    { category: '第4季度', value1: 6666, value2: 4409, value3: 680 }
+                ];
+                break;
+
+            case 'temperature':
+                // 4.5.2 实例：未来15天的最高气温和最低气温
+                this.currentData = [
+                    { category: '7月4日', value1: 32, value2: 19 },
+                    { category: '7月5日', value1: 33, value2: 19 },
+                    { category: '7月6日', value1: 34, value2: 20 },
+                    { category: '7月7日', value1: 34, value2: 22 },
+                    { category: '7月8日', value1: 33, value2: 22 },
+                    { category: '7月9日', value1: 31, value2: 21 },
+                    { category: '7月10日', value1: 30, value2: 22 },
+                    { category: '7月11日', value1: 29, value2: 16 },
+                    { category: '7月12日', value1: 30, value2: 18 },
+                    { category: '7月13日', value1: 29, value2: 18 },
+                    { category: '7月14日', value1: 26, value2: 17 },
+                    { category: '7月15日', value1: 23, value2: 14 },
+                    { category: '7月16日', value1: 21, value2: 15 },
+                    { category: '7月17日', value1: 25, value2: 16 },
+                    { category: '7月18日', value1: 31, value2: 16 }
+                ];
+                break;
+
+            default:
+                // 其他实例数据
+                this.currentData = [
+                    { category: '产品A', value1: 2144, value2: 853, value3: 153 },
+                    { category: '产品B', value1: 4617, value2: 1214, value3: 155 },
+                    { category: '产品C', value1: 7674, value2: 2414, value3: 292 },
+                    { category: '产品D', value1: 6666, value2: 4409, value3: 680 }
+                ];
+        }
+
         this.updateDataTable();
-        this.updateCodeDisplay();
-        this.updateSectionTitle();
-        this.updateStats();
-        console.log('初始化完成！');
     }
 
-    // 加载示例数据
-    loadExampleData() {
-        if (this.currentExample === 'book_purchase') {
-            // 4.2.3 图书采购情况实例数据
-            this.currentData = [
-                { category: '家庭', value1: 1200, value2: 1050 },
-                { category: '小说', value1: 2400, value2: 2100 },
-                { category: '心理', value1: 1800, value2: 1300 },
-                { category: '科技', value1: 2200, value2: 1600 },
-                { category: '儿童', value1: 1600, value2: 1340 }
-            ];
-        } else if (this.currentExample === 'exchange_rate') {
-            // 4.3.2 汇率走势图实例数据
-            this.currentData = [
-                { date: '2017-07-01', value1: 6.78, value2: 6.89 },
-                { date: '2017-07-08', value1: 6.79, value2: 6.91 },
-                { date: '2017-07-15', value1: 6.80, value2: 6.93 },
-                { date: '2017-07-22', value1: 6.82, value2: 6.95 },
-                { date: '2017-07-29', value1: 6.84, value2: 6.97 },
-                { date: '2019-07-01', value1: 6.85, value2: 6.98 },
-                { date: '2019-07-08', value1: 6.86, value2: 6.99 },
-                { date: '2019-07-15', value1: 6.87, value2: 7.00 },
-                { date: '2019-07-22', value1: 6.88, value2: 7.01 },
-                { date: '2019-07-29', value1: 6.89, value2: 7.02 }
-            ];
-        } else {
-            // 自定义数据
-            this.currentData = [
-                { category: '数据1', value1: 100, value2: 200 },
-                { category: '数据2', value1: 150, value2: 180 },
-                { category: '数据3', value1: 200, value2: 220 },
-                { category: '数据4', value1: 120, value2: 160 },
-                { category: '数据5', value1: 180, value2: 190 }
-            ];
-        }
-    }
-
-    // 初始化图表
-    initializeCharts() {
-        console.log('初始化图表...');
-        // 检查元素是否存在
-        const chart1Element = document.getElementById('mainChart1');
-        const chart2Element = document.getElementById('mainChart2');
-        
-        if (!chart1Element || !chart2Element) {
-            console.error('图表容器元素不存在！');
-            return;
-        }
-
-        // 初始化两个图表
-        try {
-            this.charts.chart1 = echarts.init(chart1Element);
-            this.charts.chart2 = echarts.init(chart2Element);
-            this.updateCharts();
-            console.log('图表初始化成功！');
-        } catch (error) {
-            console.error('图表初始化失败:', error);
-        }
-    }
-
-    // 绑定事件
     bindEvents() {
-        console.log('绑定事件...');
-        
-        // 实例选择
+        // 实例选择事件
         const exampleSelect = document.getElementById('exampleSelect');
         if (exampleSelect) {
             exampleSelect.addEventListener('change', (e) => {
                 this.currentExample = e.target.value;
-                this.loadExampleData();
-                this.updateDataTable();
+                this.initExampleData();
                 this.updateCharts();
-                this.updateCodeDisplay();
-                this.updateSectionTitle();
-                this.updateStats();
+                this.updateUI();
             });
         }
 
-        // 图表类型切换
-        this.bindSelectChange('chartType1', () => this.updateCharts());
-        this.bindSelectChange('chartType2', () => this.updateCharts());
-
-        // 动画效果
-        this.bindCheckboxChange('animation1', () => this.updateCharts());
-        this.bindCheckboxChange('animation2', () => this.updateCharts());
-
-        // 颜色方案切换
-        document.querySelectorAll('.color-scheme').forEach(scheme => {
-            scheme.addEventListener('click', () => {
-                document.querySelectorAll('.color-scheme').forEach(s => s.classList.remove('active'));
-                scheme.classList.add('active');
-                this.currentColorScheme = scheme.dataset.scheme;
-                this.updateCharts();
-                this.updateCodeDisplay();
-            });
-        });
-
-        // 颜色映射表
-        this.bindSelectChange('colormap', () => this.updateCharts());
-
-        // 线型样式
-        this.bindSelectChange('lineStyle', () => {
-            this.updateCharts();
-            this.updateCodeDisplay();
-        });
-
-        // 样式设置
-        this.bindCheckboxChange('gridToggle', () => this.updateCharts());
-        this.bindCheckboxChange('legendToggle', () => this.updateCharts());
-        this.bindCheckboxChange('smoothToggle', () => this.updateCharts());
-
-        // 高级图表设置
-        this.bindRangeInput('markerSize', 'markerSizeValue', 'px', () => this.updateCharts());
-        this.bindRangeInput('lineWidth', 'lineWidthValue', 'px', () => this.updateCharts());
-        this.bindRangeInput('opacity', 'opacityValue', '%', (e) => {
-            document.getElementById('opacityValue').textContent = Math.round(e.target.value * 100) + '%';
-            this.updateCharts();
-        }, true);
-        this.bindRangeInput('animationSpeed', 'animationSpeedValue', 'ms', () => this.updateCharts());
-
-        // 操作按钮
-        this.bindButtonClick('applyChanges', () => this.applyChanges());
-        this.bindButtonClick('resetData', () => this.resetData());
-        this.bindButtonClick('exportPNG', () => this.exportAsPNG());
-        this.bindButtonClick('exportData', () => this.exportData());
-        this.bindButtonClick('importData', () => this.showImportModal());
-        this.bindButtonClick('screenshot', () => this.takeScreenshot());
-
-        // 全屏功能
-        this.bindButtonClick('fullscreen', () => this.toggleFullscreen());
-        
-        // 图表全屏按钮
-        document.querySelectorAll('.chart-fullscreen').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const chartId = e.target.dataset.chart;
-                this.toggleChartFullscreen(chartId);
-            });
-        });
-
-        // 图表下载按钮
-        document.querySelectorAll('.chart-download').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const chartId = e.target.dataset.chart;
-                this.downloadChart(chartId);
-            });
-        });
-
-        // 章节信息
-        this.bindButtonClick('chapterInfo', () => {
-            document.getElementById('chapterModal').style.display = 'block';
-        });
+        // 编辑数据按钮事件绑定
+        this.bindButtonClick('editData', () => this.toggleDataEditor());
 
         // 主题切换
         this.bindButtonClick('themeToggle', () => this.toggleTheme());
@@ -207,6 +144,8 @@ class Chapter4AdvancedVisualizationPlatform {
         this.bindButtonClick('removeRow', () => this.removeDataRow());
         this.bindButtonClick('addColumn', () => this.addDataColumn());
         this.bindButtonClick('removeColumn', () => this.removeDataColumn());
+        this.bindButtonClick('closeEditor', () => this.toggleDataEditor());
+        this.bindButtonClick('closeEditor', () => this.toggleDataEditor());
 
         // 数据导入功能
         this.bindButtonClick('confirmImport', () => this.importData());
@@ -219,11 +158,14 @@ class Chapter4AdvancedVisualizationPlatform {
         // 窗口大小变化
         window.addEventListener('resize', () => this.resizeCharts());
 
-        // 默认激活matplotlib颜色方案
-        const matplotlibScheme = document.querySelector('[data-scheme="matplotlib"]');
-        if (matplotlibScheme) {
-            matplotlibScheme.classList.add('active');
-        }
+        // 颜色方案选择
+        document.querySelectorAll('.color-scheme').forEach(scheme => {
+            scheme.addEventListener('click', () => {
+                document.querySelectorAll('.color-scheme').forEach(s => s.classList.remove('active'));
+                scheme.classList.add('active');
+                this.updateCharts();
+            });
+        });
 
         // 模态框关闭按钮
         document.querySelectorAll('.modal .close').forEach(closeBtn => {
@@ -241,455 +183,513 @@ class Chapter4AdvancedVisualizationPlatform {
             });
         });
 
-        console.log('事件绑定完成！');
+        // 绑定控制面板事件
+        this.bindControlEvents();
     }
 
-    // 绑定选择框变化事件
-    bindSelectChange(id, callback) {
-        const element = document.getElementById(id);
-        if (element) {
-            element.addEventListener('change', callback);
-        }
-    }
-
-    // 绑定复选框变化事件
-    bindCheckboxChange(id, callback) {
-        const element = document.getElementById(id);
-        if (element) {
-            element.addEventListener('change', callback);
-        }
-    }
-
-    // 绑定范围输入变化事件
-    bindRangeInput(inputId, displayId, unit, callback, isPercentage = false) {
-        const input = document.getElementById(inputId);
-        const display = document.getElementById(displayId);
-        
-        if (input && display) {
-            input.addEventListener('input', (e) => {
-                if (isPercentage) {
-                    display.textContent = Math.round(e.target.value * 100) + unit;
-                } else {
-                    display.textContent = e.target.value + unit;
-                }
-                callback(e);
-            });
-        }
-    }
-
-    // 绑定按钮点击事件
-    bindButtonClick(id, callback) {
-        const button = document.getElementById(id);
+    bindButtonClick(buttonId, callback) {
+        const button = document.getElementById(buttonId);
         if (button) {
             button.addEventListener('click', callback);
         }
     }
 
-    // 更新图表
-    updateCharts() {
-        console.log('更新图表...');
+    bindControlEvents() {
+        // 样式应用按钮
+        this.bindButtonClick('applyChanges', () => this.applyStyleChanges());
         
-        if (!this.charts.chart1 || !this.charts.chart2) {
-            console.error('图表未初始化！');
-            return;
-        }
+        // 重置数据
+        this.bindButtonClick('resetData', () => this.resetData());
+        
+        // 导出功能
+        this.bindButtonClick('exportPNG', () => this.exportChartsAsPNG());
+        this.bindButtonClick('exportData', () => this.exportData());
+        this.bindButtonClick('importData', () => this.showImportModal());
+        this.bindButtonClick('screenshot', () => this.takeScreenshot());
+        
+        // 趋势预测
+        this.bindButtonClick('generateForecast', () => this.generateForecast());
+        
+        // 全屏模式
+        this.bindButtonClick('fullscreen', () => this.toggleFullscreen());
+        
+        // 章节信息
+        this.bindButtonClick('chapterInfo', () => this.showChapterInfo());
 
-        try {
-            const chartType1 = document.getElementById('chartType1').value;
-            const chartType2 = document.getElementById('chartType2').value;
-            const option1 = this.getChartOption(chartType1, 1);
-            const option2 = this.getChartOption(chartType2, 2);
-            
-            this.charts.chart1.setOption(option1, true);
-            this.charts.chart2.setOption(option2, true);
-            console.log('图表更新成功！');
-        } catch (error) {
-            console.error('图表更新失败:', error);
-        }
+        // 图表全屏和下载
+        document.querySelectorAll('.chart-fullscreen').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const chartId = e.target.dataset.chart;
+                this.fullscreenChart(chartId);
+            });
+        });
+
+        document.querySelectorAll('.chart-download').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const chartId = e.target.dataset.chart;
+                this.downloadChart(chartId);
+            });
+        });
+
+        // 实时滑块事件
+        this.bindSliderEvents();
     }
 
-    // 获取图表配置
-    getChartOption(chartType, chartNumber) {
-        const colors = this.colorSchemes[this.currentColorScheme];
-        const colormap = document.getElementById('colormap').value;
-        const showGrid = document.getElementById('gridToggle').checked;
-        const showLegend = document.getElementById('legendToggle').checked;
-        const animation1 = document.getElementById('animation1').checked;
-        const animation2 = document.getElementById('animation2').checked;
-        const animation = chartNumber === 1 ? animation1 : animation2;
-        const lineStyle = document.getElementById('lineStyle').value;
-        const smooth = document.getElementById('smoothToggle').checked;
+    bindSliderEvents() {
+        const sliders = [
+            { id: 'markerSize', callback: (value) => this.updateMarkerSize(value) },
+            { id: 'lineWidth', callback: (value) => this.updateLineWidth(value) },
+            { id: 'opacity', callback: (value) => this.updateOpacity(value) },
+            { id: 'animationSpeed', callback: (value) => this.updateAnimationSpeed(value) }
+        ];
+
+        sliders.forEach(slider => {
+            const element = document.getElementById(slider.id);
+            const valueElement = document.getElementById(slider.id + 'Value');
+            
+            if (element && valueElement) {
+                element.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    valueElement.textContent = slider.id === 'opacity' ? 
+                        `${Math.round(value * 100)}%` : 
+                        slider.id === 'animationSpeed' ? 
+                        `${value}ms` : 
+                        `${value}px`;
+                    
+                    slider.callback(value);
+                });
+            }
+        });
+    }
+
+    initCharts() {
+        // 初始化ECharts实例
+        this.charts['chart1'] = echarts.init(document.getElementById('mainChart1'));
+        this.charts['chart2'] = echarts.init(document.getElementById('mainChart2'));
         
-        // 高级设置
-        const markerSize = parseInt(document.getElementById('markerSize').value);
-        const lineWidth = parseInt(document.getElementById('lineWidth').value);
-        const opacity = parseFloat(document.getElementById('opacity').value);
-        const animationSpeed = parseInt(document.getElementById('animationSpeed').value);
+        // 初始化Chart.js实例用于趋势分析
+        this.initTrendChart();
+        
+        this.updateCharts();
+    }
 
-        // 生成颜色映射表
-        const generateColormapColors = () => {
-            return colors.map((color, index) => {
-                switch (colormap) {
-                    case 'viridis':
-                        return colors[index % colors.length];
-                    case 'plasma':
-                        return colors[(index + 2) % colors.length];
-                    case 'inferno':
-                        return colors[(index + 4) % colors.length];
-                    case 'magma':
-                        return colors[(index + 1) % colors.length];
-                    case 'cool':
-                        return `hsl(${240 - index * 30}, 70%, 60%)`;
-                    case 'hot':
-                        return `rgb(${255 - index * 30}, ${100 + index * 20}, ${50})`;
-                    case 'spring':
-                        return `hsl(${330 - index * 20}, 100%, 60%)`;
-                    case 'summer':
-                        return `hsl(${90 - index * 10}, 80%, 60%)`;
-                    case 'autumn':
-                        return `hsl(${30 - index * 5}, 100%, 60%)`;
-                    case 'winter':
-                        return `hsl(${240 - index * 10}, 100%, 60%)`;
-                    default:
-                        return colors[index % colors.length];
-                }
-            });
-        };
+    updateCharts() {
+        const option1 = this.generateChartOptions('chart1');
+        const option2 = this.generateChartOptions('chart2');
+        
+        this.charts['chart1'].setOption(option1, true);
+        this.charts['chart2'].setOption(option2, true);
+        
+        this.updateTrendChart();
+    }
 
-        const finalColors = colormap !== 'viridis' ? generateColormapColors() : colors;
-
+    generateChartOptions(chartId) {
+        const chartType1 = document.getElementById('chartType1').value;
+        const chartType2 = document.getElementById('chartType2').value;
+        
+        const chartType = chartId === 'chart1' ? chartType1 : chartType2;
+        
         const baseOption = {
+            animation: document.getElementById(chartId === 'chart1' ? 'animation1' : 'animation2').checked,
+            animationDuration: parseInt(document.getElementById('animationSpeed').value),
             backgroundColor: 'transparent',
-            animation: animation,
-            animationDuration: animationSpeed,
-            animationEasing: 'cubicOut',
             tooltip: {
                 trigger: 'axis',
-                formatter: (params) => {
-                    let result = `<strong>${params[0].name}</strong><br/>`;
-                    params.forEach(param => {
-                        result += `${param.seriesName}: ${param.value}<br/>`;
-                    });
-                    return result;
+                axisPointer: {
+                    type: 'cross'
                 }
             },
             legend: {
-                show: showLegend,
-                data: this.currentExample === 'book_purchase' ? ['地区1', '地区2'] : 
-                      this.currentExample === 'exchange_rate' ? ['2017年', '2019年'] : ['系列1', '系列2'],
-                textStyle: { color: '#666' }
+                show: document.getElementById('legendToggle').checked,
+                data: ['地区1', '地区2']
             },
             grid: {
                 left: '3%',
                 right: '4%',
                 bottom: '3%',
                 containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {},
+                    dataView: { readOnly: false }
+                }
             }
         };
 
-        if (this.currentExample === 'book_purchase') {
-            const categories = this.currentData.map(item => item.category);
-            const values1 = this.currentData.map(item => item.value1);
-            const values2 = this.currentData.map(item => item.value2);
+        switch (chartType) {
+            case 'line':
+                return this.generateLineChartOptions(baseOption);
+            case 'bar':
+                return this.generateBarChartOptions(baseOption);
+            case 'stacked_bar':
+                return this.generateStackedBarChartOptions(baseOption);
+            case 'area':
+                return this.generateAreaChartOptions(baseOption);
+            case 'scatter':
+                return this.generateScatterChartOptions(baseOption);
+            case 'pie':
+                return this.generatePieChartOptions(baseOption);
+            case 'radar':
+                return this.generateRadarChartOptions(baseOption);
+            default:
+                return baseOption;
+        }
+    }
 
-            switch (chartType) {
-                case 'line':
-                    return {
-                        ...baseOption,
-                        xAxis: {
-                            type: 'category',
-                            data: categories,
-                            axisLine: { lineStyle: { color: '#ccc' } }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } },
-                            splitLine: { show: showGrid, lineStyle: { color: '#f0f0f0' } }
-                        },
-                        series: [
-                            {
-                                name: '地区1',
-                                type: 'line',
-                                data: values1,
-                                smooth: smooth,
-                                lineStyle: { 
-                                    type: lineStyle,
-                                    width: lineWidth,
-                                    opacity: opacity
-                                },
-                                itemStyle: { 
-                                    color: finalColors[0],
-                                    opacity: opacity
-                                },
-                                symbolSize: markerSize,
-                                lineWidth: lineWidth
-                            },
-                            {
-                                name: '地区2',
-                                type: 'line',
-                                data: values2,
-                                smooth: smooth,
-                                lineStyle: { 
-                                    type: lineStyle,
-                                    width: lineWidth,
-                                    opacity: opacity
-                                },
-                                itemStyle: { 
-                                    color: finalColors[1],
-                                    opacity: opacity
-                                },
-                                symbolSize: markerSize,
-                                lineWidth: lineWidth
-                            }
-                        ]
-                    };
+    generateLineChartOptions(baseOption) {
+        const categories = this.currentData.map(item => 
+            this.currentExample === 'exchange_rate' ? item.date : item.category
+        );
+        
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        const smooth = document.getElementById('smoothToggle').checked;
+        const lineStyle = document.getElementById('lineStyle').value;
+        const markerSize = parseInt(document.getElementById('markerSize').value);
+        const lineWidth = parseInt(document.getElementById('lineWidth').value);
+        const opacity = parseFloat(document.getElementById('opacity').value);
+        
+        // 获取颜色方案
+        const colorScheme = this.getSelectedColorScheme();
+        const finalColors = colorScheme || ['#9AC5F4', '#A7ECEE'];
 
-                case 'bar':
-                    return {
-                        ...baseOption,
-                        xAxis: {
-                            type: 'category',
-                            data: categories,
-                            axisLine: { lineStyle: { color: '#ccc' } }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } },
-                            splitLine: { show: showGrid, lineStyle: { color: '#f0f0f0' } }
-                        },
-                        series: [
-                            {
-                                name: '地区1',
-                                type: 'bar',
-                                data: values1,
-                                itemStyle: { color: finalColors[0] }
-                            },
-                            {
-                                name: '地区2',
-                                type: 'bar',
-                                data: values2,
-                                itemStyle: { color: finalColors[1] }
-                            }
-                        ]
-                    };
+        return {
+            ...baseOption,
+            xAxis: {
+                type: 'category',
+                data: categories,
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#666'
+                    }
+                },
+                axisLabel: {
+                    rotate: this.currentExample === 'exchange_rate' ? 45 : 0
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#666'
+                    }
+                },
+                splitLine: {
+                    show: document.getElementById('gridToggle').checked,
+                    lineStyle: {
+                        color: '#f0f0f0'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: '地区1',
+                    type: 'line',
+                    data: values1,
+                    smooth: smooth,
+                    lineStyle: { 
+                        type: lineStyle,
+                        width: lineWidth,
+                        opacity: opacity
+                    },
+                    itemStyle: { 
+                        color: finalColors[0],
+                        opacity: opacity
+                    },
+                    symbolSize: markerSize,
+                    lineWidth: lineWidth
+                },
+                {
+                    name: '地区2',
+                    type: 'line',
+                    data: values2,
+                    smooth: smooth,
+                    lineStyle: { 
+                        type: lineStyle,
+                        width: lineWidth,
+                        opacity: opacity
+                    },
+                    itemStyle: { 
+                        color: finalColors[1],
+                        opacity: opacity
+                    },
+                    symbolSize: markerSize,
+                    lineWidth: lineWidth
+                }
+            ]
+        };
+    }
 
-                case 'stacked_bar':
-                    return {
-                        ...baseOption,
-                        xAxis: {
-                            type: 'category',
-                            data: categories,
-                            axisLine: { lineStyle: { color: '#ccc' } }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } },
-                            splitLine: { show: showGrid, lineStyle: { color: '#f0f0f0' } }
-                        },
-                        series: [
-                            {
-                                name: '地区1',
-                                type: 'bar',
-                                stack: '总量',
-                                data: values1,
-                                itemStyle: { color: finalColors[0] }
-                            },
-                            {
-                                name: '地区2',
-                                type: 'bar',
-                                stack: '总量',
-                                data: values2,
-                                itemStyle: { color: finalColors[1] }
-                            }
-                        ]
-                    };
+    generateBarChartOptions(baseOption) {
+        const categories = this.currentData.map(item => 
+            this.currentExample === 'exchange_rate' ? item.date : item.category
+        );
+        
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        const opacity = parseFloat(document.getElementById('opacity').value);
+        const colorScheme = this.getSelectedColorScheme();
+        const finalColors = colorScheme || ['#9AC5F4', '#A7ECEE'];
 
-                case 'area':
-                    return {
-                        ...baseOption,
-                        xAxis: {
-                            type: 'category',
-                            data: categories,
-                            axisLine: { lineStyle: { color: '#ccc' } }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } },
-                            splitLine: { show: showGrid, lineStyle: { color: '#f0f0f0' } }
-                        },
-                        series: [
-                            {
-                                name: '地区1',
-                                type: 'line',
-                                data: values1,
-                                smooth: smooth,
-                                lineStyle: { type: lineStyle },
-                                areaStyle: {
-                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                        { offset: 0, color: colors[0] },
-                                        { offset: 1, color: colors[0] + '20' }
-                                    ])
-                                }
-                            },
-                            {
-                                name: '地区2',
-                                type: 'line',
-                                data: values2,
-                                smooth: smooth,
-                                lineStyle: { type: lineStyle },
-                                areaStyle: {
-                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                                        { offset: 0, color: colors[1] },
-                                        { offset: 1, color: colors[1] + '20' }
-                                    ])
-                                }
-                            }
-                        ]
-                    };
+        return {
+            ...baseOption,
+            xAxis: {
+                type: 'category',
+                data: categories,
+                axisLabel: {
+                    rotate: this.currentExample === 'exchange_rate' ? 45 : 0
+                }
+            },
+            yAxis: {
+                type: 'value',
+                splitLine: {
+                    show: document.getElementById('gridToggle').checked
+                }
+            },
+            series: [
+                {
+                    name: '地区1',
+                    type: 'bar',
+                    data: values1,
+                    itemStyle: { color: finalColors[0], opacity: opacity }
+                },
+                {
+                    name: '地区2',
+                    type: 'bar',
+                    data: values2,
+                    itemStyle: { color: finalColors[1], opacity: opacity }
+                }
+            ]
+        };
+    }
 
-                case 'pie':
-                    return {
-                        ...baseOption,
-                        series: [
-                            {
-                                name: '地区1',
-                                type: 'pie',
-                                radius: '50%',
-                                data: categories.map((cat, i) => ({
-                                    name: cat,
-                                    value: values1[i]
-                                })),
-                                itemStyle: {
-                                    color: (params) => colors[params.dataIndex % colors.length]
-                                }
-                            }
-                        ]
-                    };
+    generateStackedBarChartOptions(baseOption) {
+        const categories = this.currentData.map(item => 
+            this.currentExample === 'exchange_rate' ? item.date : item.category
+        );
+        
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        const opacity = parseFloat(document.getElementById('opacity').value);
+        const colorScheme = this.getSelectedColorScheme();
+        const finalColors = colorScheme || ['#9AC5F4', '#A7ECEE'];
 
-                case 'radar':
-                    return {
-                        ...baseOption,
-                        radar: {
-                            indicator: categories.map(cat => ({ name: cat, max: 3000 }))
-                        },
-                        series: [
-                            {
-                                name: '地区1',
-                                type: 'radar',
-                                data: [values1],
-                                itemStyle: { color: finalColors[0] }
-                            },
-                            {
-                                name: '地区2',
-                                type: 'radar',
-                                data: [values2],
-                                itemStyle: { color: finalColors[1] }
-                            }
-                        ]
-                    };
+        return {
+            ...baseOption,
+            xAxis: {
+                type: 'category',
+                data: categories,
+                axisLabel: {
+                    rotate: this.currentExample === 'exchange_rate' ? 45 : 0
+                }
+            },
+            yAxis: {
+                type: 'value',
+                splitLine: {
+                    show: document.getElementById('gridToggle').checked
+                }
+            },
+            series: [
+                {
+                    name: '地区1',
+                    type: 'bar',
+                    stack: 'total',
+                    data: values1,
+                    itemStyle: { color: finalColors[0], opacity: opacity }
+                },
+                {
+                    name: '地区2',
+                    type: 'bar',
+                    stack: 'total',
+                    data: values2,
+                    itemStyle: { color: finalColors[1], opacity: opacity }
+                }
+            ]
+        };
+    }
 
-                default:
-                    return baseOption;
-            }
-        } else {
-            // 汇率走势图数据或自定义数据
-            const categories = this.currentData.map(item => 
-                this.currentExample === 'exchange_rate' ? item.date : item.category
-            );
-            const values1 = this.currentData.map(item => item.value1);
-            const values2 = this.currentData.map(item => item.value2);
+    generateAreaChartOptions(baseOption) {
+        const categories = this.currentData.map(item => 
+            this.currentExample === 'exchange_rate' ? item.date : item.category
+        );
+        
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        const opacity = parseFloat(document.getElementById('opacity').value);
+        const colorScheme = this.getSelectedColorScheme();
+        const finalColors = colorScheme || ['#9AC5F4', '#A7ECEE'];
 
-            const seriesName1 = this.currentExample === 'exchange_rate' ? '2017年' : '系列1';
-            const seriesName2 = this.currentExample === 'exchange_rate' ? '2019年' : '系列2';
+        return {
+            ...baseOption,
+            xAxis: {
+                type: 'category',
+                data: categories,
+                axisLabel: {
+                    rotate: this.currentExample === 'exchange_rate' ? 45 : 0
+                }
+            },
+            yAxis: {
+                type: 'value',
+                splitLine: {
+                    show: document.getElementById('gridToggle').checked
+                }
+            },
+            series: [
+                {
+                    name: '地区1',
+                    type: 'line',
+                    stack: 'total',
+                    areaStyle: {},
+                    data: values1,
+                    itemStyle: { color: finalColors[0], opacity: opacity },
+                    lineStyle: { opacity: opacity }
+                },
+                {
+                    name: '地区2',
+                    type: 'line',
+                    stack: 'total',
+                    areaStyle: {},
+                    data: values2,
+                    itemStyle: { color: finalColors[1], opacity: opacity },
+                    lineStyle: { opacity: opacity }
+                }
+            ]
+        };
+    }
 
-            switch (chartType) {
-                case 'line':
-                    return {
-                        ...baseOption,
-                        xAxis: {
-                            type: 'category',
-                            data: categories,
-                            axisLine: { lineStyle: { color: '#ccc' } }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } },
-                            splitLine: { show: showGrid, lineStyle: { color: '#f0f0f0' } }
-                        },
-                        series: [
-                            {
-                                name: seriesName1,
-                                type: 'line',
-                                data: values1,
-                                smooth: smooth,
-                                lineStyle: { type: lineStyle },
-                                itemStyle: { color: finalColors[0] }
-                            },
-                            {
-                                name: seriesName2,
-                                type: 'line',
-                                data: values2,
-                                smooth: smooth,
-                                lineStyle: { type: lineStyle },
-                                itemStyle: { color: finalColors[1] }
-                            }
-                        ]
-                    };
+    generateScatterChartOptions(baseOption) {
+        const values1 = this.currentData.map(item => [item.value1, item.value2]);
+        
+        const markerSize = parseInt(document.getElementById('markerSize').value);
+        const opacity = parseFloat(document.getElementById('opacity').value);
+        const colorScheme = this.getSelectedColorScheme();
+        const finalColors = colorScheme || ['#9AC5F4'];
 
-                case 'bar':
-                    return {
-                        ...baseOption,
-                        xAxis: {
-                            type: 'category',
-                            data: categories,
-                            axisLine: { lineStyle: { color: '#ccc' } }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } },
-                            splitLine: { show: showGrid, lineStyle: { color: '#f0f0f0' } }
-                        },
-                        series: [
-                            {
-                                name: seriesName1,
-                                type: 'bar',
-                                data: values1,
-                                itemStyle: { color: finalColors[0] }
-                            },
-                            {
-                                name: seriesName2,
-                                type: 'bar',
-                                data: values2,
-                                itemStyle: { color: finalColors[1] }
-                            }
-                        ]
-                    };
+        return {
+            ...baseOption,
+            xAxis: {
+                type: 'value',
+                name: '地区1',
+                splitLine: {
+                    show: document.getElementById('gridToggle').checked
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '地区2',
+                splitLine: {
+                    show: document.getElementById('gridToggle').checked
+                }
+            },
+            series: [
+                {
+                    type: 'scatter',
+                    data: values1,
+                    symbolSize: markerSize,
+                    itemStyle: { 
+                        color: finalColors[0],
+                        opacity: opacity
+                    }
+                }
+            ]
+        };
+    }
 
-                case 'scatter':
-                    return {
-                        ...baseOption,
-                        xAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } }
-                        },
-                        yAxis: {
-                            type: 'value',
-                            axisLine: { lineStyle: { color: '#ccc' } },
-                            splitLine: { show: showGrid, lineStyle: { color: '#f0f0f0' } }
-                        },
-                        series: [
-                            {
-                                name: seriesName1,
-                                type: 'scatter',
-                                data: values1.map((v, i) => [v, values2[i]]),
-                                itemStyle: { color: finalColors[0] }
-                            }
-                        ]
-                    };
+    generatePieChartOptions(baseOption) {
+        const categories = this.currentData.map(item => 
+            this.currentExample === 'exchange_rate' ? item.date : item.category
+        );
+        const values1 = this.currentData.map(item => item.value1);
+        
+        const opacity = parseFloat(document.getElementById('opacity').value);
+        const colorScheme = this.getSelectedColorScheme();
 
-                default:
-                    return baseOption;
-            }
+        return {
+            ...baseOption,
+            series: [
+                {
+                    type: 'pie',
+                    radius: '50%',
+                    data: categories.map((category, index) => ({
+                        name: category,
+                        value: values1[index]
+                    })),
+                    itemStyle: {
+                        opacity: opacity
+                    },
+                    label: {
+                        show: true,
+                        formatter: '{b}: {c} ({d}%)'
+                    }
+                }
+            ]
+        };
+    }
+
+    generateRadarChartOptions(baseOption) {
+        const categories = this.currentData.map(item => 
+            this.currentExample === 'exchange_rate' ? item.date : item.category
+        );
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        const opacity = parseFloat(document.getElementById('opacity').value);
+        const colorScheme = this.getSelectedColorScheme();
+        const finalColors = colorScheme || ['#9AC5F4', '#A7ECEE'];
+
+        return {
+            ...baseOption,
+            radar: {
+                indicator: categories.map(category => ({ name: category, max: Math.max(...values1, ...values2) * 1.2 }))
+            },
+            series: [
+                {
+                    type: 'radar',
+                    data: [
+                        {
+                            value: values1,
+                            name: '地区1',
+                            itemStyle: { color: finalColors[0], opacity: opacity },
+                            lineStyle: { opacity: opacity }
+                        },
+                        {
+                            value: values2,
+                            name: '地区2',
+                            itemStyle: { color: finalColors[1], opacity: opacity },
+                            lineStyle: { opacity: opacity }
+                        }
+                    ]
+                }
+            ]
+        };
+    }
+
+    getSelectedColorScheme() {
+        const activeScheme = document.querySelector('.color-scheme.active');
+        if (!activeScheme) return null;
+        
+        const scheme = activeScheme.dataset.scheme;
+        
+        // 高级淡色方案 - 优雅淡色、精致淡色、宁静淡色
+        switch (scheme) {
+            case 'elegant':
+                return ['#9AC5F4', '#A7ECEE', '#FFE699', '#FFA8A8', '#C4C1E0'];
+            case 'delicate':
+                return ['#F8C6D7', '#D4F1F9', '#FFE6B3', '#B5EAD7', '#C9C2FF'];
+            case 'serene':
+                return ['#E1F5FE', '#F3E5F5', '#E8F5E8', '#FFF3E0', '#FCE4EC'];
+            case 'matplotlib':
+                return ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'];
+            default:
+                // 默认使用优雅淡色方案
+                return ['#9AC5F4', '#A7ECEE', '#FFE699', '#FFA8A8', '#C4C1E0'];
         }
     }
 
@@ -706,8 +706,8 @@ class Chapter4AdvancedVisualizationPlatform {
             rows = this.currentData.map((item, index) => `
                 <tr>
                     <td>${item.category}</td>
-                    <td><input type="number" value="${item.value1}" onchange="platform.updateDataValue(${index}, 'value1', this.value)"></td>
-                    <td><input type="number" value="${item.value2}" onchange="platform.updateDataValue(${index}, 'value2', this.value)"></td>
+                    <td><input type="number" value="${item.value1}" data-index="${index}" data-field="value1" step="0.1" class="data-input"></td>
+                    <td><input type="number" value="${item.value2}" data-index="${index}" data-field="value2" step="0.1" class="data-input"></td>
                 </tr>
             `).join('');
         } else if (this.currentExample === 'exchange_rate') {
@@ -715,508 +715,88 @@ class Chapter4AdvancedVisualizationPlatform {
             rows = this.currentData.map((item, index) => `
                 <tr>
                     <td>${item.date}</td>
-                    <td><input type="number" value="${item.value1}" onchange="platform.updateDataValue(${index}, 'value1', this.value)"></td>
-                    <td><input type="number" value="${item.value2}" onchange="platform.updateDataValue(${index}, 'value2', this.value)"></td>
+                    <td><input type="number" value="${item.value1}" data-index="${index}" data-field="value1" step="0.01" class="data-input"></td>
+                    <td><input type="number" value="${item.value2}" data-index="${index}" data-field="value2" step="0.01" class="data-input"></td>
                 </tr>
             `).join('');
         } else {
             headers = '<tr><th onclick="platform.sortData(\'category\')" style="cursor: pointer;">类别 🔽</th><th onclick="platform.sortData(\'value1\')" style="cursor: pointer;">系列1 🔽</th><th onclick="platform.sortData(\'value2\')" style="cursor: pointer;">系列2 🔽</th></tr>';
             rows = this.currentData.map((item, index) => `
                 <tr>
-                    <td><input type="text" value="${item.category}" onchange="platform.updateDataValue(${index}, 'category', this.value)"></td>
-                    <td><input type="number" value="${item.value1}" onchange="platform.updateDataValue(${index}, 'value1', this.value)"></td>
-                    <td><input type="number" value="${item.value2}" onchange="platform.updateDataValue(${index}, 'value2', this.value)"></td>
+                    <td><input type="text" value="${item.category}" data-index="${index}" data-field="category" class="data-input"></td>
+                    <td><input type="number" value="${item.value1}" data-index="${index}" data-field="value1" step="0.1" class="data-input"></td>
+                    <td><input type="number" value="${item.value2}" data-index="${index}" data-field="value2" step="0.1" class="data-input"></td>
                 </tr>
             `).join('');
         }
         
         table.innerHTML = `<table><thead>${headers}</thead><tbody>${rows}</tbody></table>`;
+        
+        // 绑定input事件监听器
+        this.bindInputEvents();
     }
 
-    // 数据排序
+    bindInputEvents() {
+        // 为所有input元素添加事件监听器
+        const inputs = document.querySelectorAll('#dataTable input');
+        inputs.forEach(input => {
+            // 移除之前的事件监听器
+            input.removeEventListener('input', this.handleInputChange);
+            input.removeEventListener('change', this.handleInputChange);
+            
+            // 添加新的事件监听器
+            input.addEventListener('input', this.handleInputChange.bind(this));
+            input.addEventListener('change', this.handleInputChange.bind(this));
+        });
+    }
+
+    handleInputChange(event) {
+        const input = event.target;
+        const index = parseInt(input.getAttribute('data-index'));
+        const field = input.getAttribute('data-field');
+        const value = input.value;
+        
+        console.log('Input changed:', { index, field, value });
+        
+        if (index >= 0 && field) {
+            this.updateDataValue(index, field, value);
+        }
+    }
+
+    updateDataValue(index, field, value) {
+        console.log('正在更新数据:', index, field, value);
+        
+        if (index >= 0 && index < this.currentData.length) {
+            if (field === 'value1' || field === 'value2') {
+                const numValue = parseFloat(value);
+                this.currentData[index][field] = isNaN(numValue) ? 0 : numValue;
+            } else {
+                this.currentData[index][field] = value;
+            }
+            
+            console.log('更新后数据:', this.currentData[index]);
+            
+            this.updateCharts();
+            this.updateStats();
+            this.updateTrendChart();
+            this.showAlert('数据已更新！');
+        } else {
+            console.error('索引超出范围:', index);
+            this.showAlert('数据更新失败，请检查索引！', 'error');
+        }
+    }
+
     sortData(field) {
         this.currentData.sort((a, b) => {
-            if (typeof a[field] === 'string') {
+            if (field === 'category' || field === 'date') {
                 return a[field].localeCompare(b[field]);
             } else {
                 return a[field] - b[field];
             }
         });
+        
         this.updateDataTable();
         this.updateCharts();
-        this.showAlert(`数据已按 ${field} 排序`);
-    }
-
-    // 更新数据值
-    updateDataValue(index, field, value) {
-        this.currentData[index][field] = field.includes('value') ? parseFloat(value) : value;
-        this.updateCharts();
-        this.updateStats();
-    }
-
-    // 更新统计信息
-    updateStats() {
-        const values = [...this.currentData.map(item => item.value1), ...this.currentData.map(item => item.value2)];
-        const count = values.length;
-        const mean = values.reduce((a, b) => a + b, 0) / count;
-        const max = Math.max(...values);
-        const min = Math.min(...values);
-
-        const countElement = document.getElementById('dataCount');
-        const meanElement = document.getElementById('dataMean');
-        const maxElement = document.getElementById('dataMax');
-        const minElement = document.getElementById('dataMin');
-
-        if (countElement) countElement.textContent = count;
-        if (meanElement) meanElement.textContent = mean.toFixed(2);
-        if (maxElement) maxElement.textContent = max.toFixed(2);
-        if (minElement) minElement.textContent = min.toFixed(2);
-    }
-
-    // 更新代码显示
-    updateCodeDisplay() {
-        const pythonCode = document.getElementById('pythonCode');
-        const javascriptCode = document.getElementById('javascriptCode');
-        
-        if (!pythonCode || !javascriptCode) return;
-
-        const chartType1 = document.getElementById('chartType1').value;
-        const chartType2 = document.getElementById('chartType2').value;
-        const showGrid = document.getElementById('gridToggle').checked;
-        const showLegend = document.getElementById('legendToggle').checked;
-        const smooth = document.getElementById('smoothToggle').checked;
-        const lineStyle = document.getElementById('lineStyle').value;
-        const colormap = document.getElementById('colormap').value;
-        
-        if (this.currentExample === 'book_purchase') {
-            pythonCode.innerHTML = `
-                <pre><code># 第四章 4.2.3 实例代码 - 两个地区对图书采购情况
-# 知识点：图表样式、颜色应用、线型选择
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-# 4.1 图表样式配置
-plt.rcParams['font.sans-serif'] = ['SimHei']     # 中文字体
-plt.rcParams['axes.unicode_minus'] = False      # 负号显示
-plt.rcParams['figure.figsize'] = (10, 6)         # 图表尺寸
-
-# 4.2 颜色应用 - ${colormap}颜色映射表
-colors = plt.cm.${colormap}(np.linspace(0, 1, 5))
-
-# 数据准备
-categories = ['家庭', '小说', '心理', '科技', '儿童']
-region1 = [1200, 2400, 1800, 2200, 1600]
-region2 = [1050, 2100, 1300, 1600, 1340]
-
-# 创建图表
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-
-# 图表1: ${this.getChartDisplayName(chartType1)}
-if '${chartType1}' == 'line':
-    ax1.plot(categories, region1, color=colors[0], linewidth=2, 
-             linestyle='${this.getMatplotlibLineStyle(lineStyle)}', 
-             marker='o', label='地区1')
-    ax1.plot(categories, region2, color=colors[1], linewidth=2,
-             linestyle='${this.getMatplotlibLineStyle(lineStyle)}', 
-             marker='s', label='地区2')
-    ax1.set_title('图书采购趋势对比')
-elif '${chartType1}' == 'bar':
-    x = np.arange(len(categories))
-    ax1.bar(x - 0.2, region1, 0.4, color=colors[0], label='地区1')
-    ax1.bar(x + 0.2, region2, 0.4, color=colors[1], label='地区2')
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(categories)
-    ax1.set_title('图书采购数量对比')
-
-# 图表2: ${this.getChartDisplayName(chartType2)}
-if '${chartType2}' == 'area':
-    ax2.fill_between(categories, region1, alpha=0.3, color=colors[0], label='地区1')
-    ax2.fill_between(categories, region2, alpha=0.3, color=colors[1], label='地区2')
-    ax2.set_title('图书采购面积图')
-
-# 4.3 线型样式与图表美化
-ax1.grid(${showGrid}, alpha=0.3)
-ax2.grid(${showGrid}, alpha=0.3)
-ax1.legend() if ${showLegend} else None
-ax2.legend() if ${showLegend} else None
-
-plt.tight_layout()
-plt.show()</code></pre>
-            `;
-        } else {
-            pythonCode.innerHTML = `
-                <pre><code># 第四章 4.3.2 实例代码 - 美元/人民币汇率走势
-# 知识点：时间序列、线型应用、图表样式
-
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-
-# 样式配置
-plt.style.use('seaborn-v0_8')  # 使用seaborn样式
-plt.rcParams['font.sans-serif'] = ['SimHei']
-
-# 汇率数据准备
-dates_2017 = ['2017-07-01', '2017-07-08', '2017-07-15', '2017-07-22', '2017-07-29']
-dates_2019 = ['2019-07-01', '2019-07-08', '2019-07-15', '2019-07-22', '2019-07-29']
-rates_2017 = [6.78, 6.79, 6.80, 6.82, 6.84]
-rates_2019 = [6.85, 6.86, 6.87, 6.88, 6.89]
-
-# 创建图表
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-
-# 图表1: ${this.getChartDisplayName(chartType1)}
-if '${chartType1}' == 'line':
-    # 4.3.2 线型选择应用
-    ax1.plot(dates_2017, rates_2017, color='${this.colorSchemes[this.currentColorScheme][0]}',
-             linewidth=2, linestyle='${this.getMatplotlibLineStyle(lineStyle)}',
-             marker='o', label='2017年')
-    ax1.plot(dates_2019, rates_2019, color='${this.colorSchemes[this.currentColorScheme][1]}',
-             linewidth=2, linestyle='${this.getMatplotlibLineStyle(lineStyle)}',
-             marker='s', label='2019年')
-    ax1.set_title('汇率走势对比')
-    ax1.tick_params(axis='x', rotation=45)
-
-# 图表2: ${this.getChartDisplayName(chartType2)}
-if '${chartType2}' == 'scatter':
-    ax2.scatter(rates_2017, rates_2019, color='${this.colorSchemes[this.currentColorScheme][2]}',
-               alpha=0.7, s=100)
-    ax2.set_title('汇率散点关系')
-
-# 图表样式设置
-ax1.grid(${showGrid}, alpha=0.3)
-ax2.grid(${showGrid}, alpha=0.3)
-if ${showLegend}:
-    ax1.legend(loc='best')
-
-plt.tight_layout()
-plt.show()</code></pre>
-            `;
-        }
-
-        javascriptCode.innerHTML = `
-            <pre><code>// ECharts配置代码示例
-// 基于第四章数据可视化需求
-
-// 图表1: ${this.getChartDisplayName(chartType1)}
-const option1 = {
-    title: {
-        text: '图表1: ${this.getChartDisplayName(chartType1)}',
-        left: 'center',
-        textStyle: { fontSize: 16, fontWeight: 'bold' }
-    },
-    tooltip: {
-        trigger: 'axis',
-        formatter: function(params) {
-            return params[0].name + '<br/>' + 
-                   params.map(p => p.marker + p.seriesName + ': ' + p.value).join('<br/>');
-        }
-    },
-    legend: {
-        show: ${showLegend},
-        data: ['${this.currentExample === 'book_purchase' ? '地区1' : '2017年'}', '${this.currentExample === 'book_purchase' ? '地区2' : '2019年'}'],
-        top: '10%'
-    },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: {
-        type: 'category',
-        data: ${JSON.stringify(this.currentData.map(d => d.category || d.date))},
-        axisLabel: { rotate: 45 }
-    },
-    yAxis: { type: 'value' },
-    series: [
-        {
-            name: '${this.currentExample === 'book_purchase' ? '地区1' : '2017年'}',
-            type: '${chartType1}',
-            data: ${JSON.stringify(this.currentData.map(d => d.value1))},
-            smooth: ${smooth},
-            lineStyle: { type: '${lineStyle}' },
-            itemStyle: { color: '${this.colorSchemes[this.currentColorScheme][0]}' }
-        }
-    ]
-};
-
-// 图表2: ${this.getChartDisplayName(chartType2)}
-const option2 = {
-    title: {
-        text: '图表2: ${this.getChartDisplayName(chartType2)}',
-        left: 'center',
-        textStyle: { fontSize: 16, fontWeight: 'bold' }
-    },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: {
-        type: 'category',
-        data: ${JSON.stringify(this.currentData.map(d => d.category || d.date))},
-        axisLabel: { rotate: 45 }
-    },
-    yAxis: { type: 'value' },
-    series: [
-        {
-            name: '${this.currentExample === 'book_purchase' ? '地区2' : '2019年'}',
-            type: '${chartType2}',
-            data: ${JSON.stringify(this.currentData.map(d => d.value2))},
-            smooth: ${smooth},
-            lineStyle: { type: '${lineStyle}' },
-            itemStyle: { color: '${this.colorSchemes[this.currentColorScheme][1]}' }
-        }
-    ]
-};
-
-// 图表初始化
-echarts.init(document.getElementById('chart1')).setOption(option1);
-echarts.init(document.getElementById('chart2')).setOption(option2);</code></pre>
-        `;
-    }
-
-    // 获取图表显示名称
-    getChartDisplayName(chartType) {
-        const names = {
-            'line': '折线图',
-            'bar': '柱状图',
-            'stacked_bar': '堆叠柱状图',
-            'area': '面积图',
-            'scatter': '散点图',
-            'pie': '饼图',
-            'radar': '雷达图'
-        };
-        return names[chartType] || chartType;
-    }
-
-    // 获取matplotlib线型样式
-    getMatplotlibLineStyle(lineStyle) {
-        const styles = {
-            'solid': '-',
-            'dashed': '--',
-            'dotted': ':',
-            'dashdot': '-.'
-        };
-        return styles[lineStyle] || '-';
-    }
-
-    // 更新章节标题
-    updateSectionTitle() {
-        const sectionElement = document.getElementById('currentSection');
-        if (!sectionElement) return;
-        
-        if (this.currentExample === 'book_purchase') {
-            sectionElement.textContent = '4.2.3 图书采购情况实例';
-        } else if (this.currentExample === 'exchange_rate') {
-            sectionElement.textContent = '4.3.2 汇率走势图实例';
-        } else {
-            sectionElement.textContent = '自定义数据实例';
-        }
-    }
-
-    // 应用更改
-    applyChanges() {
-        this.updateCharts();
-        this.updateCodeDisplay();
-        this.showAlert('图表样式已成功应用！');
-    }
-
-    // 重置数据
-    resetData() {
-        this.loadExampleData();
-        this.updateDataTable();
-        this.updateCharts();
-        this.updateStats();
-        this.showAlert('数据已重置为初始状态！');
-    }
-
-    // 导出为PNG
-    exportAsPNG() {
-        if (!this.charts.chart1) {
-            this.showAlert('请先初始化图表！', 'error');
-            return;
-        }
-        
-        try {
-            const chart = this.charts.chart1;
-            const imageUrl = chart.getDataURL({
-                type: 'png',
-                pixelRatio: 2,
-                backgroundColor: '#fff'
-            });
-            
-            const link = document.createElement('a');
-            link.href = imageUrl;
-            link.download = `chapter4-${this.currentExample}-chart.png`;
-            link.click();
-            this.showAlert('图表已导出为PNG文件！');
-        } catch (error) {
-            this.showAlert('图表导出失败！', 'error');
-            console.error('导出失败:', error);
-        }
-    }
-
-    // 导出数据
-    exportData() {
-        const dataStr = JSON.stringify(this.currentData, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `chapter4-${this.currentExample}-data.json`;
-        link.click();
-        this.showAlert('数据已导出为JSON文件！');
-    }
-
-    // 显示导入模态框
-    showImportModal() {
-        document.getElementById('importModal').style.display = 'block';
-    }
-
-    // 隐藏导入模态框
-    hideImportModal() {
-        document.getElementById('importModal').style.display = 'none';
-    }
-
-    // 导入数据
-    importData() {
-        const fileInput = document.getElementById('dataFile');
-        const file = fileInput.files[0];
-        
-        if (!file) {
-            this.showAlert('请选择要导入的文件！', 'error');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (Array.isArray(data)) {
-                    this.currentData = data;
-                    this.updateDataTable();
-                    this.updateCharts();
-                    this.updateStats();
-                    this.hideImportModal();
-                    this.showAlert('数据导入成功！');
-                } else {
-                    this.showAlert('文件格式不正确！', 'error');
-                }
-            } catch (error) {
-                this.showAlert('文件解析错误！', 'error');
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    // 截图功能
-    takeScreenshot() {
-        if (typeof html2canvas === 'undefined') {
-            this.showAlert('html2canvas库未加载，无法截图！', 'error');
-            return;
-        }
-        
-        html2canvas(document.querySelector('.chart-area')).then(canvas => {
-            const image = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.href = image;
-            link.download = 'chapter4-visualization-screenshot.png';
-            link.click();
-        }).catch(error => {
-            this.showAlert('截图失败！', 'error');
-            console.error('截图失败:', error);
-        });
-    }
-
-    // 切换主题
-    toggleTheme() {
-        document.body.classList.toggle('dark-theme');
-        const isDark = document.body.classList.contains('dark-theme');
-        
-        // 更新图表主题
-        Object.keys(this.charts).forEach(key => {
-            if (this.charts[key]) {
-                this.charts[key].dispose();
-                this.charts[key] = echarts.init(document.getElementById(`mainChart${key.slice(-1)}`), isDark ? 'dark' : null);
-            }
-        });
-        this.updateCharts();
-        this.showAlert(isDark ? '已切换到暗色主题' : '已切换到亮色主题');
-    }
-
-    // 全屏查看
-    toggleFullscreen() {
-        const chartArea = document.querySelector('.chart-area');
-        
-        if (!document.fullscreenElement) {
-            // 进入全屏
-            if (chartArea.requestFullscreen) {
-                chartArea.requestFullscreen();
-            } else if (chartArea.webkitRequestFullscreen) {
-                chartArea.webkitRequestFullscreen();
-            } else if (chartArea.msRequestFullscreen) {
-                chartArea.msRequestFullscreen();
-            }
-            this.showAlert('已进入全屏模式，按ESC键退出');
-        } else {
-            // 退出全屏
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-            this.showAlert('已退出全屏模式');
-        }
-    }
-
-    // 图表全屏
-    toggleChartFullscreen(chartId) {
-        const chartContainer = document.getElementById(`mainChart${chartId}`).parentElement;
-        
-        if (!document.fullscreenElement) {
-            if (chartContainer.requestFullscreen) {
-                chartContainer.requestFullscreen();
-            }
-            this.showAlert(`图表${chartId}已进入全屏模式`);
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
-            this.showAlert('已退出全屏模式');
-        }
-    }
-
-    // 下载图表
-    downloadChart(chartId) {
-        const chart = this.charts[`chart${chartId}`];
-        if (!chart) {
-            this.showAlert('图表未初始化！', 'error');
-            return;
-        }
-        
-        try {
-            const imageUrl = chart.getDataURL({
-                type: 'png',
-                pixelRatio: 2,
-                backgroundColor: '#fff'
-            });
-            
-            const link = document.createElement('a');
-            link.href = imageUrl;
-            link.download = `chart${chartId}-${this.currentExample}.png`;
-            link.click();
-            this.showAlert(`图表${chartId}已下载！`);
-        } catch (error) {
-            this.showAlert('图表下载失败！', 'error');
-            console.error('下载失败:', error);
-        }
     }
 
     // 数据编辑功能
@@ -1270,6 +850,103 @@ echarts.init(document.getElementById('chart2')).setOption(option2);</code></pre>
         }
     }
 
+    // 编辑数据功能
+    toggleDataEditor() {
+        const dataEditor = document.querySelector('.data-editor');
+        if (dataEditor) {
+            if (dataEditor.style.display === 'none' || dataEditor.style.display === '') {
+                dataEditor.style.display = 'block';
+                this.showAlert('数据编辑功能已激活！请在下方的数据表格中直接编辑数值');
+            } else {
+                dataEditor.style.display = 'none';
+                this.showAlert('数据编辑功能已关闭');
+            }
+        } else {
+            this.showAlert('数据编辑面板未找到！', 'error');
+        }
+    }
+
+    // 样式应用
+    applyStyleChanges() {
+        this.updateCharts();
+        this.showAlert('样式已应用！');
+    }
+
+    // 重置数据
+    resetData() {
+        this.initExampleData();
+        this.updateCharts();
+        this.updateStats();
+        this.showAlert('数据已重置！');
+    }
+
+    // 更新UI
+    updateUI() {
+        const chartTitle = document.getElementById('chartTitle');
+        const currentSection = document.getElementById('currentSection');
+        
+        if (chartTitle && currentSection) {
+            switch (this.currentExample) {
+                case 'book_purchase':
+                    chartTitle.textContent = '4.2.3 两个地区对不同种类图书的采购情况';
+                    currentSection.textContent = '4.2.3 图书采购情况实例';
+                    break;
+                case 'exchange_rate':
+                    chartTitle.textContent = '4.3.2 2017年7月与2019年7月国际外汇市场美元/人民币汇率走势';
+                    currentSection.textContent = '4.3.2 汇率走势图';
+                    break;
+                case 'product_sales':
+                    chartTitle.textContent = '4.4.2 标记不同产品各季度的销售额';
+                    currentSection.textContent = '4.4.2 产品销售分析';
+                    break;
+                case 'temperature':
+                    chartTitle.textContent = '4.5.2 未来15天的最高气温和最低气温';
+                    currentSection.textContent = '4.5.2 气温变化趋势';
+                    break;
+                default:
+                    chartTitle.textContent = '第四章数据可视化平台';
+                    currentSection.textContent = '自定义数据';
+            }
+        }
+        
+        this.updateStats();
+    }
+
+    // 更新统计信息
+    updateStats() {
+        const values = [...this.currentData.map(item => item.value1), ...this.currentData.map(item => item.value2)];
+        
+        document.getElementById('dataCount').textContent = this.currentData.length;
+        
+        if (values.length > 0) {
+            const sum = values.reduce((a, b) => a + b, 0);
+            const mean = sum / values.length;
+            const max = Math.max(...values);
+            const min = Math.min(...values);
+            
+            document.getElementById('dataMean').textContent = mean.toFixed(2);
+            document.getElementById('dataMax').textContent = max.toFixed(2);
+            document.getElementById('dataMin').textContent = min.toFixed(2);
+        }
+    }
+
+    // 滑块更新函数
+    updateMarkerSize(size) {
+        this.updateCharts();
+    }
+
+    updateLineWidth(width) {
+        this.updateCharts();
+    }
+
+    updateOpacity(opacity) {
+        this.updateCharts();
+    }
+
+    updateAnimationSpeed(speed) {
+        this.updateCharts();
+    }
+
     // 调整图表大小
     resizeCharts() {
         Object.keys(this.charts).forEach(key => {
@@ -1279,72 +956,377 @@ echarts.init(document.getElementById('chart2')).setOption(option2);</code></pre>
         });
     }
 
-    // 显示提醒
+    // 主题切换
+    toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+        this.updateCharts();
+        this.showAlert('主题已切换！');
+    }
+
+    // 全屏模式
+    toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    // 图表全屏
+    fullscreenChart(chartId) {
+        const chartElement = document.getElementById(`mainChart${chartId}`);
+        if (chartElement && !chartElement.classList.contains('fullscreen')) {
+            chartElement.classList.add('fullscreen');
+            this.charts[`chart${chartId}`].resize();
+        } else {
+            chartElement.classList.remove('fullscreen');
+            this.charts[`chart${chartId}`].resize();
+        }
+    }
+
+    // 导出图表
+    downloadChart(chartId) {
+        try {
+            const chart = this.charts[`chart${chartId}`];
+            const imageUrl = chart.getDataURL({
+                type: 'png',
+                pixelRatio: 2,
+                backgroundColor: '#fff'
+            });
+            
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = `chart${chartId}-${this.currentExample}.png`;
+            link.click();
+            this.showAlert(`图表${chartId}已下载！`);
+        } catch (error) {
+            this.showAlert('图表下载失败！', 'error');
+            console.error('下载失败:', error);
+        }
+    }
+
+    // 趋势分析图表
+    initTrendChart() {
+        const ctx = document.getElementById('trendChart').getContext('2d');
+        this.trendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    }
+
+    updateTrendChart() {
+        if (!this.trendChart) return;
+        
+        const labels = this.currentData.map(item => 
+            this.currentExample === 'exchange_rate' ? item.date : item.category
+        );
+        
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        this.trendChart.data.labels = labels;
+        this.trendChart.data.datasets = [
+            {
+                label: '系列1',
+                data: values1,
+                borderColor: '#9AC5F4',
+                backgroundColor: 'rgba(154, 197, 244, 0.1)',
+                tension: 0.1
+            },
+            {
+                label: '系列2',
+                data: values2,
+                borderColor: '#A7ECEE',
+                backgroundColor: 'rgba(167, 236, 238, 0.1)',
+                tension: 0.1
+            }
+        ];
+        
+        this.trendChart.update();
+        this.updateAnalysis();
+    }
+
+    // 分析功能
+    updateAnalysis() {
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        // 计算相关系数
+        const correlation = this.calculateCorrelation(values1, values2);
+        document.getElementById('correlation').textContent = correlation.toFixed(3);
+        
+        // 计算增长率
+        if (values1.length > 1) {
+            const growthRate = ((values1[values1.length - 1] - values1[0]) / values1[0] * 100).toFixed(1);
+            document.getElementById('growthRate').textContent = `${growthRate}%`;
+        }
+        
+        // 计算标准差
+        const stdDev = this.calculateStandardDeviation(values1);
+        document.getElementById('stdDev').textContent = stdDev.toFixed(2);
+        
+        // 计算变异系数
+        const mean = values1.reduce((a, b) => a + b, 0) / values1.length;
+        const cv = (stdDev / mean * 100).toFixed(1);
+        document.getElementById('cv').textContent = `${cv}%`;
+        
+        // 更新趋势摘要
+        this.updateTrendSummary();
+        
+        // 更新数据洞察
+        this.updateInsights();
+    }
+
+    calculateCorrelation(arr1, arr2) {
+        if (arr1.length !== arr2.length) return 0;
+        
+        const n = arr1.length;
+        const sum1 = arr1.reduce((a, b) => a + b, 0);
+        const sum2 = arr2.reduce((a, b) => a + b, 0);
+        const sum1Sq = arr1.reduce((a, b) => a + b * b, 0);
+        const sum2Sq = arr2.reduce((a, b) => a + b * b, 0);
+        const pSum = arr1.reduce((a, b, i) => a + b * arr2[i], 0);
+        
+        const num = pSum - (sum1 * sum2) / n;
+        const den = Math.sqrt((sum1Sq - sum1 * sum1 / n) * (sum2Sq - sum2 * sum2 / n));
+        
+        return den === 0 ? 0 : num / den;
+    }
+
+    calculateStandardDeviation(arr) {
+        const n = arr.length;
+        const mean = arr.reduce((a, b) => a + b, 0) / n;
+        return Math.sqrt(arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / n);
+    }
+
+    updateTrendSummary() {
+        const values1 = this.currentData.map(item => item.value1);
+        const summary = document.getElementById('trendSummary');
+        
+        if (values1.length > 1) {
+            const trend = values1[values1.length - 1] > values1[0] ? '上升' : '下降';
+            const change = Math.abs(values1[values1.length - 1] - values1[0]).toFixed(2);
+            
+            summary.innerHTML = `
+                <p>数据呈现<strong>${trend}</strong>趋势，变化量为 ${change}</p>
+                <p>数据点数量: ${values1.length}</p>
+                <p>数据范围: ${Math.min(...values1).toFixed(2)} - ${Math.max(...values1).toFixed(2)}</p>
+            `;
+        }
+    }
+
+    updateInsights() {
+        const insightsList = document.getElementById('insightsList');
+        const values1 = this.currentData.map(item => item.value1);
+        
+        if (values1.length > 0) {
+            const maxVal = Math.max(...values1);
+            const minVal = Math.min(...values1);
+            const avgVal = values1.reduce((a, b) => a + b, 0) / values1.length;
+            
+            insightsList.innerHTML = `
+                <li>最大值出现在 ${this.currentData[values1.indexOf(maxVal)].category || this.currentData[values1.indexOf(maxVal)].date}</li>
+                <li>最小值出现在 ${this.currentData[values1.indexOf(minVal)].category || this.currentData[values1.indexOf(minVal)].date}</li>
+                <li>平均值: ${avgVal.toFixed(2)}</li>
+                <li>数据波动范围: ${(maxVal - minVal).toFixed(2)}</li>
+            `;
+        }
+    }
+
+    // 趋势预测
+    generateForecast() {
+        const values1 = this.currentData.map(item => item.value1);
+        
+        if (values1.length > 1) {
+            // 简单的线性回归预测
+            const n = values1.length;
+            const x = Array.from({length: n}, (_, i) => i);
+            const y = values1;
+            
+            const sumX = x.reduce((a, b) => a + b, 0);
+            const sumY = y.reduce((a, b) => a + b, 0);
+            const sumXY = x.reduce((a, b, i) => a + b * y[i], 0);
+            const sumX2 = x.reduce((a, b) => a + b * b, 0);
+            
+            const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            
+            const forecastValue = slope * n + intercept;
+            
+            document.getElementById('forecastResults').innerHTML = `
+                <p>基于线性回归预测，下一个数据点约为: <strong>${forecastValue.toFixed(2)}</strong></p>
+                <p>趋势斜率: ${slope.toFixed(3)}</p>
+                <p>预测模型: y = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}</p>
+            `;
+        }
+    }
+
+    // 导出功能
+    exportData() {
+        const dataStr = JSON.stringify(this.currentData, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(dataBlob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `data-${this.currentExample}.json`;
+        link.click();
+        
+        this.showAlert('数据已导出！');
+    }
+
+    exportChartsAsPNG() {
+        try {
+            this.downloadChart('1');
+            setTimeout(() => this.downloadChart('2'), 500);
+        } catch (error) {
+            this.showAlert('图表导出失败！', 'error');
+        }
+    }
+
+    takeScreenshot() {
+        html2canvas(document.querySelector('.container')).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `screenshot-${this.currentExample}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            this.showAlert('截图已保存！');
+        });
+    }
+
+    // 数据导入
+    showImportModal() {
+        document.getElementById('importModal').style.display = 'block';
+    }
+
+    hideImportModal() {
+        document.getElementById('importModal').style.display = 'none';
+    }
+
+    importData() {
+        const fileInput = document.getElementById('dataFile');
+        const file = fileInput.files[0];
+        
+        if (!file) {
+            this.showAlert('请选择文件！', 'error');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (Array.isArray(data)) {
+                    this.currentData = data;
+                    this.updateDataTable();
+                    this.updateCharts();
+                    this.updateStats();
+                    this.showAlert('数据导入成功！');
+                    this.hideImportModal();
+                } else {
+                    this.showAlert('文件格式不正确！', 'error');
+                }
+            } catch (error) {
+                this.showAlert('文件解析失败！', 'error');
+            }
+        };
+        
+        reader.readAsText(file);
+    }
+
+    // 章节信息
+    showChapterInfo() {
+        document.getElementById('chapterModal').style.display = 'block';
+    }
+
+    // 分析报告
+    exportAnalysisReport() {
+        const report = this.generateAnalysisReport();
+        const blob = new Blob([report], {type: 'text/plain'});
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `analysis-report-${this.currentExample}.txt`;
+        link.click();
+        
+        this.showAlert('分析报告已导出！');
+    }
+
+    generateAnalysisReport() {
+        const values1 = this.currentData.map(item => item.value1);
+        const values2 = this.currentData.map(item => item.value2);
+        
+        return `数据分析报告 - ${this.currentExample}
+生成时间: ${new Date().toLocaleString()}
+
+数据统计:
+- 数据点数量: ${values1.length}
+- 平均值: ${(values1.reduce((a, b) => a + b, 0) / values1.length).toFixed(2)}
+- 最大值: ${Math.max(...values1).toFixed(2)}
+- 最小值: ${Math.min(...values1).toFixed(2)}
+- 标准差: ${this.calculateStandardDeviation(values1).toFixed(2)}
+
+趋势分析:
+- 相关系数: ${this.calculateCorrelation(values1, values2).toFixed(3)}
+- 数据波动性: ${((Math.max(...values1) - Math.min(...values1)) / Math.min(...values1) * 100).toFixed(1)}%
+
+数据洞察:
+${this.generateDataInsights()}
+`;
+    }
+
+    generateDataInsights() {
+        const values1 = this.currentData.map(item => item.value1);
+        let insights = '';
+        
+        if (values1.length > 0) {
+            const trend = values1[values1.length - 1] > values1[0] ? '上升' : '下降';
+            insights += `- 整体趋势: ${trend}\n`;
+            insights += `- 数据范围: ${Math.min(...values1).toFixed(2)} - ${Math.max(...values1).toFixed(2)}\n`;
+            insights += `- 平均增长率: ${((values1[values1.length - 1] - values1[0]) / values1[0] * 100).toFixed(1)}%\n`;
+        }
+        
+        return insights;
+    }
+
+    // 高级分析
+    performAdvancedAnalysis() {
+        this.showAlert('高级分析功能开发中...');
+    }
+
+    // 提示消息
     showAlert(message, type = 'success') {
         const alertModal = document.getElementById('alertModal');
         const alertMessage = document.getElementById('alertMessage');
         
-        if (!alertModal || !alertMessage) {
-            console.log(`Alert: ${message} (${type})`);
-            return;
+        if (alertModal && alertMessage) {
+            alertMessage.textContent = message;
+            alertMessage.className = type;
+            alertModal.style.display = 'block';
+            
+            setTimeout(() => {
+                alertModal.style.display = 'none';
+            }, 3000);
         }
-        
-        alertMessage.textContent = message;
-        
-        // 设置消息类型样式
-        alertMessage.className = '';
-        if (type === 'error') {
-            alertMessage.classList.add('error');
-        } else if (type === 'warning') {
-            alertMessage.classList.add('warning');
-        } else {
-            alertMessage.classList.add('success');
-        }
-        
-        alertModal.style.display = 'block';
-        
-        // 自动关闭提醒
-        const closeTime = type === 'error' ? 5000 : type === 'warning' ? 4000 : 3000;
-        setTimeout(() => {
-            alertModal.style.display = 'none';
-        }, closeTime);
-    }
-
-    // 导出分析报告（简化版）
-    exportAnalysisReport() {
-        this.showAlert('分析报告功能正在开发中...', 'warning');
-    }
-
-    // 高级分析（简化版）
-    performAdvancedAnalysis() {
-        this.showAlert('高级分析功能正在开发中...', 'warning');
     }
 }
 
-// 页面加载完成后初始化
-window.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM加载完成，初始化平台...');
-    
-    // 检查ECharts是否加载
-    if (typeof echarts === 'undefined') {
-        console.error('ECharts库未加载！');
-        return;
-    }
-    
-    // 创建全局平台实例
-    window.platform = new Chapter4AdvancedVisualizationPlatform();
-    console.log('第四章高级数据可视化平台初始化完成！');
-});
+// 初始化平台
+const platform = new DataVisualizationPlatform();
 
-// 处理窗口加载完成
-window.addEventListener('load', () => {
-    console.log('页面完全加载完成！');
-    
-    // 如果DOM加载时echarts还未准备好，这里再次尝试初始化
-    if (window.platform) {
-        console.log('平台已初始化，重新检查图表...');
-        setTimeout(() => {
-            window.platform.initializeCharts();
-        }, 100);
-    }
-});
+// 全局函数供HTML调用
+window.updateDataValue = (index, field, value) => platform.updateDataValue(index, field, value);
+window.sortData = (field) => platform.sortData(field);
+window.platform = platform;
